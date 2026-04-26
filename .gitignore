@@ -1,0 +1,6 @@
+.tmp-profile/
+.verify-profile-*/
+
+# OS / editor
+.DS_Store
+Thumbs.db
