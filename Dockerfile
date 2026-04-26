@@ -8,6 +8,7 @@ COPY styles.css ./styles.css
 COPY script.js ./script.js
 COPY data ./data
 COPY downloads ./downloads
+COPY media ./media
 
 EXPOSE 80
 

@@ -1,5 +1,6 @@
 const serviceItems = {
   booking: {
+    key: "booking",
     tab: "订舱服务",
     title: "订舱服务",
     text: "针对整箱（FCL）及拼箱（LCL）国际运输，我们将根据实际情况，为您推荐所需的货船或航班，并安排最佳货运舱位。",
@@ -14,6 +15,7 @@ const serviceItems = {
     `
   },
   customs: {
+    key: "customs",
     tab: "清关·查验",
     title: "通关 · 检查",
     text: "凭借广博深厚的专业学识，以及久经沉淀的丰富经验，全方位助力进出口货物合法依规、高效快捷地通过行政许可流程，确保每一次货物流转都畅行无阻。",
@@ -27,6 +29,7 @@ const serviceItems = {
     `
   },
   warehouse: {
+    key: "warehouse",
     tab: "仓储配送服务",
     title: "仓库·配送",
     text: "我们珍视客户所托，定将其重要货物如期送达，不负所望。同时，对于客户的细致需求与特殊条件，将竭尽所能，全力提升服务品质，不负每一份信任。",
@@ -44,10 +47,12 @@ const serviceItems = {
 };
 
 const noticesApiUrl = "/api/notices";
+const siteAssetsApiUrl = "/api/site-assets";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 
 let noticesCache = null;
+let siteAssetsCache = null;
 
 async function loadNotices() {
   if (noticesCache) {
@@ -55,9 +60,7 @@ async function loadNotices() {
   }
 
   const response = await fetch(noticesApiUrl, {
-    headers: {
-      Accept: "application/json"
-    }
+    headers: { Accept: "application/json" }
   });
 
   if (!response.ok) {
@@ -69,14 +72,63 @@ async function loadNotices() {
   return noticesCache;
 }
 
+async function loadSiteAssets() {
+  if (siteAssetsCache) {
+    return siteAssetsCache;
+  }
+
+  const response = await fetch(siteAssetsApiUrl, {
+    headers: { Accept: "application/json" }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load site assets: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  siteAssetsCache = payload || {};
+  return siteAssetsCache;
+}
+
+function escapeHtml(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getServiceAsset(siteAssets, serviceKey) {
+  return siteAssets?.services?.[serviceKey] || {};
+}
+
+function serviceMediaMarkup(service, serviceAsset) {
+  if (serviceAsset?.imageUrl) {
+    const alt = serviceAsset.imageAlt || service.title;
+
+    return `
+      <div id="service-media" class="service-media service-media-image">
+        <img class="service-media-photo" src="${escapeHtml(serviceAsset.imageUrl)}" alt="${escapeHtml(alt)}">
+      </div>
+    `;
+  }
+
+  return `
+    <div id="service-media" class="service-media ${service.mediaClass}">
+      ${service.illustration}
+    </div>
+  `;
+}
+
 function scheduleRows(items, limit = 5) {
   return items
     .slice(0, limit)
     .map(
       (item) => `
         <a class="schedule-row" href="#/news">
-          <span>${item.title}</span>
-          <span>${item.updatedAt}</span>
+          <span>${escapeHtml(item.title)}</span>
+          <span>${escapeHtml(item.updatedAt)}</span>
         </a>
       `
     )
@@ -88,30 +140,37 @@ function newsRows(items) {
     .map(
       (item) => `
         <div class="news-row">
-          <span class="news-title">${item.title}</span>
+          <span class="news-title">${escapeHtml(item.title)}</span>
           <span class="news-pdf">
-            <a class="pdf-download" href="${item.downloadUrl}" download="${item.fileName || ""}" target="_blank" rel="noopener noreferrer" aria-label="下载 ${item.title}">
+            <a class="pdf-download" href="${escapeHtml(item.downloadUrl)}" download="${escapeHtml(item.fileName || "")}" target="_blank" rel="noopener noreferrer" aria-label="下载 ${escapeHtml(item.title)}">
               <span class="pdf-icon" aria-hidden="true"></span>
             </a>
           </span>
-          <span class="news-time">${item.updatedAt}</span>
+          <span class="news-time">${escapeHtml(item.updatedAt)}</span>
         </div>
       `
     )
     .join("");
 }
 
-function homePage(items) {
+function homePage(items, siteAssets) {
   const initial = serviceItems.booking;
+  const initialAsset = getServiceAsset(siteAssets, initial.key);
+  const heroTitle = siteAssets?.homeHero?.title || "专业成就可能";
+  const heroSubtitle = siteAssets?.homeHero?.subtitle || "让精准履约，驱动你的全球化交付。";
+  const heroStyle = siteAssets?.homeHero?.backgroundImageUrl
+    ? ` style="background-image: linear-gradient(90deg, rgba(14, 26, 38, 0.58), rgba(14, 26, 38, 0.14) 40%, rgba(255, 255, 255, 0) 75%), url('${escapeHtml(siteAssets.homeHero.backgroundImageUrl)}');"`
+    : "";
+  const newsTitle = siteAssets?.newsHero?.title || "通知与船舶计划";
 
   return `
     <div class="page-shell">
-      <section class="hero">
+      <section class="hero hero-has-asset"${heroStyle}>
         <div class="hero-overlay"></div>
         <div class="container hero-inner">
           <div class="hero-copy">
-            <h1>专业成就可能</h1>
-            <p>让精准履约，驱动你的全球化交付。</p>
+            <h1>${escapeHtml(heroTitle)}</h1>
+            <p>${escapeHtml(heroSubtitle)}</p>
           </div>
         </div>
       </section>
@@ -127,7 +186,7 @@ function homePage(items) {
               .map(
                 ([key, item], index) => `
                   <button class="service-tab ${index === 0 ? "is-active" : ""}" type="button" data-service="${key}">
-                    ${item.tab}
+                    ${escapeHtml(item.tab)}
                   </button>
                 `
               )
@@ -135,13 +194,11 @@ function homePage(items) {
           </div>
 
           <article class="service-panel">
-            <div id="service-media" class="service-media ${initial.mediaClass}">
-              ${initial.illustration}
-            </div>
+            ${serviceMediaMarkup(initial, initialAsset)}
 
             <div class="service-content">
-              <h3 id="service-title">${initial.title}</h3>
-              <p id="service-text">${initial.text}</p>
+              <h3 id="service-title">${escapeHtml(initial.title)}</h3>
+              <p id="service-text">${escapeHtml(initial.text)}</p>
               <a class="text-link" href="#/service">查看更多</a>
             </div>
           </article>
@@ -151,7 +208,7 @@ function homePage(items) {
       <section class="section section-schedule">
         <div class="container">
           <div class="section-heading">
-            <h2>通知与船舶计划</h2>
+            <h2>${escapeHtml(newsTitle)}</h2>
           </div>
 
           <div class="schedule-table">
@@ -190,14 +247,20 @@ function homePage(items) {
   `;
 }
 
-function newsPage(items) {
+function newsPage(items, siteAssets) {
+  const heroTitle = siteAssets?.newsHero?.title || "通知与船舶计划";
+  const heroSubtitle = siteAssets?.newsHero?.subtitle || "我们将提供最新资讯和船期表等相关通知";
+  const heroStyle = siteAssets?.newsHero?.backgroundImageUrl
+    ? ` style="background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.05)), url('${escapeHtml(siteAssets.newsHero.backgroundImageUrl)}');"`
+    : "";
+
   return `
     <div class="page-shell">
-      <section class="news-hero">
+      <section class="news-hero news-hero-has-asset"${heroStyle}>
         <div class="container news-hero-inner">
           <div class="news-hero-copy">
-            <h1>通知与船舶计划</h1>
-            <p>我们将提供最新资讯和船期表等相关通知</p>
+            <h1>${escapeHtml(heroTitle)}</h1>
+            <p>${escapeHtml(heroSubtitle)}</p>
           </div>
         </div>
       </section>
@@ -234,8 +297,8 @@ function placeholderPage(title, text) {
     <section class="placeholder-page">
       <div class="container">
         <div class="placeholder-card">
-          <h1>${title}</h1>
-          <p>${text}</p>
+          <h1>${escapeHtml(title)}</h1>
+          <p>${escapeHtml(text)}</p>
         </div>
       </div>
     </section>
@@ -248,7 +311,7 @@ function loadingPage() {
       <div class="container">
         <div class="placeholder-card">
           <h1>加载中</h1>
-          <p>正在读取通知与船舶计划数据...</p>
+          <p>正在读取网站素材和通知数据...</p>
         </div>
       </div>
     </section>
@@ -261,7 +324,7 @@ function errorPage() {
       <div class="container">
         <div class="placeholder-card">
           <h1>数据加载失败</h1>
-          <p>请检查 `/api/notices` 接口和 PDF 文件路径是否已正确部署。</p>
+          <p>请检查 <code>/api/notices</code>、<code>/api/site-assets</code> 以及素材文件路径是否已正确部署。</p>
         </div>
       </div>
     </section>
@@ -278,13 +341,28 @@ function setActiveNav(route) {
   });
 }
 
-function bindServiceTabs() {
+function applyBrandAssets(siteAssets) {
+  const logoUrl = siteAssets?.brand?.logoImageUrl;
+  const brandMarks = document.querySelectorAll(".brand-mark");
+
+  brandMarks.forEach((element) => {
+    if (logoUrl) {
+      element.classList.add("has-image");
+      element.style.backgroundImage = `url('${logoUrl}')`;
+    } else {
+      element.classList.remove("has-image");
+      element.style.backgroundImage = "";
+    }
+  });
+}
+
+function bindServiceTabs(siteAssets) {
   const tabs = document.querySelectorAll(".service-tab");
   const title = document.querySelector("#service-title");
   const text = document.querySelector("#service-text");
-  const media = document.querySelector("#service-media");
+  const panel = document.querySelector(".service-panel");
 
-  if (!tabs.length || !title || !text || !media) {
+  if (!tabs.length || !title || !text || !panel) {
     return;
   }
 
@@ -296,12 +374,17 @@ function bindServiceTabs() {
         return;
       }
 
+      const nextAsset = getServiceAsset(siteAssets, next.key);
+      const media = panel.querySelector("#service-media");
+
       tabs.forEach((item) => item.classList.remove("is-active"));
       tab.classList.add("is-active");
       title.textContent = next.title;
       text.textContent = next.text;
-      media.className = `service-media ${next.mediaClass}`;
-      media.innerHTML = next.illustration;
+
+      if (media) {
+        media.outerHTML = serviceMediaMarkup(next, nextAsset);
+      }
     });
   });
 }
@@ -338,9 +421,10 @@ async function render() {
   app.innerHTML = loadingPage();
 
   try {
-    const notices = await loadNotices();
-    app.innerHTML = route === "/home" ? homePage(notices) : newsPage(notices);
-    bindServiceTabs();
+    const [notices, siteAssets] = await Promise.all([loadNotices(), loadSiteAssets()]);
+    applyBrandAssets(siteAssets);
+    app.innerHTML = route === "/home" ? homePage(notices, siteAssets) : newsPage(notices, siteAssets);
+    bindServiceTabs(siteAssets);
     window.scrollTo({ top: 0, behavior: "auto" });
   } catch (error) {
     console.error(error);

@@ -1,39 +1,64 @@
 # new-website Docker 部署
 
-这个项目是纯静态前端页面，已经改造成可以直接通过 Docker 和 Nginx 部署，同时提供了 PDF 列表接口和固定下载路径，方便后续维护。
+这个项目是纯静态前端页面，已经改造成可以直接通过 Docker 和 Nginx 部署，同时提供了两类可维护接口：
+
+- PDF 列表接口
+- 网站图片素材接口
 
 ## 目录说明
 
 - `Dockerfile`：构建静态站点镜像
 - `docker-compose.yml`：本地或服务器一键启动
 - `nginx/default.conf`：Nginx 站点配置
-- `data/notices.json`：资讯中心 PDF 列表接口数据源
+- `data/notices.json`：资讯中心 PDF 列表数据源
+- `data/site-assets.json`：网站图片素材配置数据源
 - `downloads/`：PDF 文件目录
+- `media/`：图片素材目录
 
-## PDF 接口与下载地址
+## 接口说明
 
-前端现在不是把 PDF 列表写死在代码里，而是通过接口读取：
+### 1. PDF 列表接口
 
 ```text
 GET /api/notices
 ```
 
-这个接口实际返回的是：
+对应数据文件：
 
 ```text
 /data/notices.json
 ```
 
-单个 PDF 的下载路径统一放在：
+PDF 下载路径：
 
 ```text
 /downloads/<文件名>.pdf
 ```
 
+### 2. 网站图片素材接口
+
+```text
+GET /api/site-assets
+```
+
+对应数据文件：
+
+```text
+/data/site-assets.json
+```
+
+图片访问路径：
+
+```text
+/media/<文件名>
+```
+
 例如：
 
 ```text
-/downloads/2026-04-shanghai.pdf
+/media/home-hero.jpg
+/media/news-hero.jpg
+/media/service-booking.jpg
 ```
 
 ## 如何维护 PDF
@@ -43,7 +68,7 @@ GET /api/notices
 1. 把 PDF 文件上传到 `downloads/` 目录
 2. 修改 `data/notices.json`
 
-`data/notices.json` 示例：
+示例：
 
 ```json
 {
@@ -59,13 +84,55 @@ GET /api/notices
 }
 ```
 
-字段说明：
+## 如何维护网站图片
 
-- `id`：唯一标识，便于管理
-- `title`：页面展示标题
-- `updatedAt`：更新时间
-- `fileName`：下载文件名
-- `downloadUrl`：实际下载地址
+后续你只需要做两件事：
+
+1. 把图片文件上传到 `media/` 目录
+2. 修改 `data/site-assets.json`
+
+示例：
+
+```json
+{
+  "brand": {
+    "logoImageUrl": "/media/logo.png"
+  },
+  "homeHero": {
+    "title": "专业成就可能",
+    "subtitle": "让精准履约，驱动你的全球化交付。",
+    "backgroundImageUrl": "/media/home-hero.jpg"
+  },
+  "newsHero": {
+    "title": "通知与船舶计划",
+    "subtitle": "我们将提供最新资讯和船期表等相关通知",
+    "backgroundImageUrl": "/media/news-hero.jpg"
+  },
+  "services": {
+    "booking": {
+      "imageUrl": "/media/service-booking.jpg",
+      "imageAlt": "订舱服务"
+    },
+    "customs": {
+      "imageUrl": "/media/service-customs.jpg",
+      "imageAlt": "清关查验"
+    },
+    "warehouse": {
+      "imageUrl": "/media/service-warehouse.jpg",
+      "imageAlt": "仓储配送服务"
+    }
+  }
+}
+```
+
+当前前端已支持这些图片配置：
+
+- 顶部 Logo
+- 首页首屏背景图
+- 资讯中心首屏背景图
+- 服务项目介绍的三张切换图片
+
+如果某个图片地址为空，前端会自动使用当前内置的默认视觉样式，不会报错。
 
 ## 本地构建运行
 
