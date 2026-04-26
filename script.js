@@ -47,28 +47,125 @@ const serviceItems = {
 };
 
 const noticesApiUrl = "/api/notices";
+const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
+const siteAssetsFallbackUrl = "/data/site-assets.json";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 
 let noticesCache = null;
 let siteAssetsCache = null;
 
+const defaultNotices = [
+  {
+    id: "2026-05-shidao-lianyungang-qingdao",
+    title: "2026年5月 石岛/连云/青岛港 船期表",
+    updatedAt: "2026-04-24 16:26",
+    fileName: "2026-05-shidao-lianyungang-qingdao.pdf",
+    downloadUrl: "/downloads/2026-05-shidao-lianyungang-qingdao.pdf"
+  },
+  {
+    id: "2026-05-taicang",
+    title: "2026年5月 太仓港 船期表",
+    updatedAt: "2026-04-24 15:30",
+    fileName: "2026-05-taicang.pdf",
+    downloadUrl: "/downloads/2026-05-taicang.pdf"
+  },
+  {
+    id: "2026-05-tianjin-dalian",
+    title: "2026年5月 天津/大连港 船期表",
+    updatedAt: "2026-04-24 15:26",
+    fileName: "2026-05-tianjin-dalian.pdf",
+    downloadUrl: "/downloads/2026-05-tianjin-dalian.pdf"
+  },
+  {
+    id: "2026-05-ningbo-zhapu",
+    title: "2026年5月 宁波/乍浦港 船期表",
+    updatedAt: "2026-04-24 09:36",
+    fileName: "2026-05-ningbo-zhapu.pdf",
+    downloadUrl: "/downloads/2026-05-ningbo-zhapu.pdf"
+  },
+  {
+    id: "2026-05-shanghai",
+    title: "2026年5月 上海港 船期表",
+    updatedAt: "2026-04-24 09:32",
+    fileName: "2026-05-shanghai.pdf",
+    downloadUrl: "/downloads/2026-05-shanghai.pdf"
+  },
+  {
+    id: "2026-04-shidao-lianyungang-qingdao",
+    title: "2026年4月 石岛/连云/青岛港 船期表",
+    updatedAt: "2026-03-27 13:31",
+    fileName: "2026-04-shidao-lianyungang-qingdao.pdf",
+    downloadUrl: "/downloads/2026-04-shidao-lianyungang-qingdao.pdf"
+  },
+  {
+    id: "2026-04-tianjin-dalian",
+    title: "2026年4月 天津/大连港 船期表",
+    updatedAt: "2026-03-27 13:29",
+    fileName: "2026-04-tianjin-dalian.pdf",
+    downloadUrl: "/downloads/2026-04-tianjin-dalian.pdf"
+  },
+  {
+    id: "2026-04-taicang",
+    title: "2026年4月 太仓港 船期表",
+    updatedAt: "2026-03-27 13:27",
+    fileName: "2026-04-taicang.pdf",
+    downloadUrl: "/downloads/2026-04-taicang.pdf"
+  },
+  {
+    id: "2026-04-shanghai",
+    title: "2026年4月 上海港 船期表",
+    updatedAt: "2026-03-27 13:24",
+    fileName: "2026-04-shanghai.pdf",
+    downloadUrl: "/downloads/2026-04-shanghai.pdf"
+  },
+  {
+    id: "2026-04-ningbo-zhapu",
+    title: "2026年4月 宁波/乍浦港 船期表",
+    updatedAt: "2026-03-27 13:23",
+    fileName: "2026-04-ningbo-zhapu.pdf",
+    downloadUrl: "/downloads/2026-04-ningbo-zhapu.pdf"
+  }
+];
+
+const defaultSiteAssets = {
+  brand: {
+    logoImageUrl: ""
+  },
+  homeHero: {
+    title: "专业成就可能",
+    subtitle: "精准安排每一段航程，连接你的全球交付计划。",
+    backgroundImageUrl: "/media/home-hero.jpg"
+  },
+  newsHero: {
+    title: "通知与船舶计划",
+    subtitle: "我们将提供最新资讯和船期表等相关通知",
+    backgroundImageUrl: "/media/news-hero.jpg"
+  },
+  services: {
+    booking: {
+      imageUrl: "/media/service-booking.jpg",
+      imageAlt: "订舱服务"
+    },
+    customs: {
+      imageUrl: "/media/service-customs.jpg",
+      imageAlt: "清关查验"
+    },
+    warehouse: {
+      imageUrl: "/media/service-warehouse.jpg",
+      imageAlt: "仓储配送服务"
+    }
+  }
+};
+
 async function loadNotices() {
   if (noticesCache) {
     return noticesCache;
   }
 
-  const response = await fetch(noticesApiUrl, {
-    headers: { Accept: "application/json" }
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to load notices: ${response.status}`);
-  }
-
-  const payload = await response.json();
-  noticesCache = Array.isArray(payload.items) ? payload.items : [];
+  const payload = await loadJsonWithFallback(noticesApiUrl, noticesFallbackUrl);
+  noticesCache = Array.isArray(payload?.items) ? payload.items : defaultNotices;
   return noticesCache;
 }
 
@@ -77,17 +174,37 @@ async function loadSiteAssets() {
     return siteAssetsCache;
   }
 
-  const response = await fetch(siteAssetsApiUrl, {
-    headers: { Accept: "application/json" }
-  });
+  const payload = await loadJsonWithFallback(siteAssetsApiUrl, siteAssetsFallbackUrl);
+  siteAssetsCache = payload || defaultSiteAssets;
+  return siteAssetsCache;
+}
 
-  if (!response.ok) {
-    throw new Error(`Failed to load site assets: ${response.status}`);
+async function loadJsonWithFallback(primaryUrl, fallbackUrl) {
+  try {
+    const primaryResponse = await fetch(primaryUrl, {
+      headers: { Accept: "application/json" }
+    });
+
+    if (primaryResponse.ok) {
+      return await primaryResponse.json();
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch ${primaryUrl}`, error);
   }
 
-  const payload = await response.json();
-  siteAssetsCache = payload || {};
-  return siteAssetsCache;
+  try {
+    const fallbackResponse = await fetch(fallbackUrl, {
+      headers: { Accept: "application/json" }
+    });
+
+    if (fallbackResponse.ok) {
+      return await fallbackResponse.json();
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch ${fallbackUrl}`, error);
+  }
+
+  return null;
 }
 
 function escapeHtml(value = "") {

@@ -186,6 +186,75 @@ cd /opt/new-website
 docker compose up -d --build
 ```
 
+## Git Push 后自动部署
+
+项目已内置自动部署文件：
+
+- 工作流：[.github/workflows/deploy.yml](/d:/web/new-website/.github/workflows/deploy.yml)
+- 服务器部署脚本：[scripts/deploy.sh](/d:/web/new-website/scripts/deploy.sh)
+
+实现方式是：
+
+1. 你 `git push` 到 `main` 或 `master`
+2. GitHub Actions 自动触发
+3. Actions 通过 SSH 登录服务器
+4. 服务器执行 `git pull`
+5. 自动执行 `docker compose up -d --build`
+
+### 服务器首次准备
+
+先在服务器上完成一次初始化：
+
+```bash
+mkdir -p /opt/new-website
+git clone <你的仓库地址> /opt/new-website
+cd /opt/new-website
+docker compose up -d --build
+```
+
+### GitHub Secrets 配置
+
+你需要在 GitHub 仓库的 `Settings > Secrets and variables > Actions` 中添加这些 Secrets：
+
+- `SERVER_HOST`
+  你的服务器 IP 或域名
+- `SERVER_PORT`
+  SSH 端口，默认一般是 `22`
+- `SERVER_USER`
+  服务器登录用户，例如 `root` 或 `ubuntu`
+- `SERVER_SSH_KEY`
+  用于登录服务器的私钥内容
+- `SERVER_APP_DIR`
+  服务器项目目录，例如 `/opt/new-website`
+- `SERVER_APP_BRANCH`
+  自动部署分支，例如 `main`
+
+### 服务器 SSH 公钥配置
+
+把和 `SERVER_SSH_KEY` 对应的公钥加入服务器：
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+echo "<你的公钥内容>" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### 自动部署脚本做了什么
+
+服务器上的部署脚本会自动执行：
+
+```bash
+git fetch --all --prune
+git checkout <部署分支>
+git pull --ff-only origin <部署分支>
+docker compose up -d --build
+```
+
+### 手动触发
+
+除了推送触发，这个工作流也支持在 GitHub Actions 页面手动点 `Run workflow`。
+
 ### 4. 放行防火墙端口
 
 如果服务器开启了防火墙，需要放行 80 端口：

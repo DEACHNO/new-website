@@ -4,25 +4,25 @@
   },
   "homeHero": {
     "title": "专业成就可能",
-    "subtitle": "让精准履约，驱动你的全球化交付。",
-    "backgroundImageUrl": ""
+    "subtitle": "精准安排每一段航程，连接你的全球交付计划。",
+    "backgroundImageUrl": "/media/home-hero.jpg"
   },
   "newsHero": {
     "title": "通知与船舶计划",
     "subtitle": "我们将提供最新资讯和船期表等相关通知",
-    "backgroundImageUrl": ""
+    "backgroundImageUrl": "/media/news-hero.jpg"
   },
   "services": {
     "booking": {
-      "imageUrl": "",
+      "imageUrl": "/media/service-booking.jpg",
       "imageAlt": "订舱服务"
     },
     "customs": {
-      "imageUrl": "",
+      "imageUrl": "/media/service-customs.jpg",
       "imageAlt": "清关查验"
     },
     "warehouse": {
-      "imageUrl": "",
+      "imageUrl": "/media/service-warehouse.jpg",
       "imageAlt": "仓储配送服务"
     }
   }
