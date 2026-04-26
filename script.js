@@ -55,6 +55,7 @@ const navLinks = Array.from(document.querySelectorAll(".nav a"));
 
 let noticesCache = null;
 let siteAssetsCache = null;
+let heroCarouselTimer = null;
 
 const defaultNotices = [
   {
@@ -134,9 +135,28 @@ const defaultSiteAssets = {
     logoImageUrl: ""
   },
   homeHero: {
-    title: "专业成就可能",
-    subtitle: "精准安排每一段航程，连接你的全球交付计划。",
-    backgroundImageUrl: "/media/home-hero.jpg"
+    slides: [
+      {
+        title: "专业成就可能",
+        subtitle: "精准安排每一段航程，连接你的全球交付计划。",
+        backgroundImageUrl: "/media/home-hero.jpg"
+      },
+      {
+        title: "专业成就可能",
+        subtitle: "海运、空运与仓配协同，提升每一次履约效率。",
+        backgroundImageUrl: "/media/service-booking.jpg"
+      },
+      {
+        title: "专业成就可能",
+        subtitle: "合规清关与现场查验支持，让货物流转更顺畅。",
+        backgroundImageUrl: "/media/service-customs.jpg"
+      },
+      {
+        title: "专业成就可能",
+        subtitle: "稳定仓储与配送执行，保障重要货物按期送达。",
+        backgroundImageUrl: "/media/service-warehouse.jpg"
+      }
+    ]
   },
   newsHero: {
     title: "通知与船舶计划",
@@ -220,6 +240,26 @@ function getServiceAsset(siteAssets, serviceKey) {
   return siteAssets?.services?.[serviceKey] || {};
 }
 
+function getHomeHeroSlides(siteAssets) {
+  const slides = siteAssets?.homeHero?.slides;
+
+  if (Array.isArray(slides) && slides.length) {
+    return slides;
+  }
+
+  if (siteAssets?.homeHero?.backgroundImageUrl) {
+    return [
+      {
+        title: siteAssets.homeHero.title || "专业成就可能",
+        subtitle: siteAssets.homeHero.subtitle || "",
+        backgroundImageUrl: siteAssets.homeHero.backgroundImageUrl
+      }
+    ];
+  }
+
+  return defaultSiteAssets.homeHero.slides;
+}
+
 function serviceMediaMarkup(service, serviceAsset) {
   if (serviceAsset?.imageUrl) {
     const alt = serviceAsset.imageAlt || service.title;
@@ -273,22 +313,46 @@ function newsRows(items) {
 function homePage(items, siteAssets) {
   const initial = serviceItems.booking;
   const initialAsset = getServiceAsset(siteAssets, initial.key);
-  const heroTitle = siteAssets?.homeHero?.title || "专业成就可能";
-  const heroSubtitle = siteAssets?.homeHero?.subtitle || "让精准履约，驱动你的全球化交付。";
-  const heroStyle = siteAssets?.homeHero?.backgroundImageUrl
-    ? ` style="background-image: linear-gradient(90deg, rgba(14, 26, 38, 0.58), rgba(14, 26, 38, 0.14) 40%, rgba(255, 255, 255, 0) 75%), url('${escapeHtml(siteAssets.homeHero.backgroundImageUrl)}');"`
-    : "";
+  const heroSlides = getHomeHeroSlides(siteAssets);
+  const firstSlide = heroSlides[0];
   const newsTitle = siteAssets?.newsHero?.title || "通知与船舶计划";
 
   return `
     <div class="page-shell">
-      <section class="hero hero-has-asset"${heroStyle}>
+      <section class="hero">
+        <div class="hero-carousel" aria-hidden="true">
+          ${heroSlides
+            .map(
+              (slide, index) => `
+                <div
+                  class="hero-slide ${index === 0 ? "is-active" : ""}"
+                  data-hero-slide="${index}"
+                  style="background-image: linear-gradient(90deg, rgba(14, 26, 38, 0.58), rgba(14, 26, 38, 0.14) 40%, rgba(255, 255, 255, 0) 75%), url('${escapeHtml(slide.backgroundImageUrl)}');"
+                ></div>
+              `
+            )
+            .join("")}
+        </div>
         <div class="hero-overlay"></div>
         <div class="container hero-inner">
           <div class="hero-copy">
-            <h1>${escapeHtml(heroTitle)}</h1>
-            <p>${escapeHtml(heroSubtitle)}</p>
+            <h1 id="hero-title">${escapeHtml(firstSlide.title || "专业成就可能")}</h1>
+            <p id="hero-subtitle">${escapeHtml(firstSlide.subtitle || "")}</p>
           </div>
+        </div>
+        <div class="hero-indicators" role="tablist" aria-label="首页轮播图">
+          ${heroSlides
+            .map(
+              (slide, index) => `
+                <button
+                  class="hero-indicator ${index === 0 ? "is-active" : ""}"
+                  type="button"
+                  data-hero-indicator="${index}"
+                  aria-label="切换到第 ${index + 1} 张轮播图"
+                ></button>
+              `
+            )
+            .join("")}
         </div>
       </section>
 
@@ -473,6 +537,51 @@ function applyBrandAssets(siteAssets) {
   });
 }
 
+function initHeroCarousel(siteAssets) {
+  if (heroCarouselTimer) {
+    window.clearInterval(heroCarouselTimer);
+    heroCarouselTimer = null;
+  }
+
+  const slides = getHomeHeroSlides(siteAssets);
+  const slideElements = Array.from(document.querySelectorAll("[data-hero-slide]"));
+  const indicatorElements = Array.from(document.querySelectorAll("[data-hero-indicator]"));
+  const titleElement = document.querySelector("#hero-title");
+  const subtitleElement = document.querySelector("#hero-subtitle");
+
+  if (slides.length <= 1 || !slideElements.length || !indicatorElements.length || !titleElement || !subtitleElement) {
+    return;
+  }
+
+  let activeIndex = 0;
+
+  const applySlide = (nextIndex) => {
+    activeIndex = nextIndex;
+
+    slideElements.forEach((element, index) => {
+      element.classList.toggle("is-active", index === nextIndex);
+    });
+
+    indicatorElements.forEach((element, index) => {
+      element.classList.toggle("is-active", index === nextIndex);
+    });
+
+    titleElement.textContent = slides[nextIndex].title || "专业成就可能";
+    subtitleElement.textContent = slides[nextIndex].subtitle || "";
+  };
+
+  indicatorElements.forEach((element, index) => {
+    element.addEventListener("click", () => {
+      applySlide(index);
+    });
+  });
+
+  heroCarouselTimer = window.setInterval(() => {
+    const nextIndex = (activeIndex + 1) % slides.length;
+    applySlide(nextIndex);
+  }, 4000);
+}
+
 function bindServiceTabs(siteAssets) {
   const tabs = document.querySelectorAll(".service-tab");
   const title = document.querySelector("#service-title");
@@ -542,6 +651,7 @@ async function render() {
     applyBrandAssets(siteAssets);
     app.innerHTML = route === "/home" ? homePage(notices, siteAssets) : newsPage(notices, siteAssets);
     bindServiceTabs(siteAssets);
+    initHeroCarousel(siteAssets);
     window.scrollTo({ top: 0, behavior: "auto" });
   } catch (error) {
     console.error(error);
