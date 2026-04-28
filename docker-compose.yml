@@ -5,5 +5,5 @@ services:
       dockerfile: Dockerfile
     container_name: new-website
     ports:
-      - "80:80"
+      - "8000:80"
     restart: unless-stopped
