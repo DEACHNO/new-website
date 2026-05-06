@@ -522,11 +522,13 @@ function setActiveNav(route) {
 }
 
 function applyBrandAssets(siteAssets) {
-  const logoUrl = siteAssets?.brand?.logoImageUrl;
+  const headerLogoUrl = siteAssets?.brand?.headerLogoImageUrl || siteAssets?.brand?.logoImageUrl;
+  const footerLogoUrl = siteAssets?.brand?.footerLogoImageUrl || headerLogoUrl;
   const brandMarks = document.querySelectorAll(".brand-mark");
 
   brandMarks.forEach((element) => {
     const brand = element.closest(".brand");
+    const logoUrl = brand?.classList.contains("brand-footer") ? footerLogoUrl : headerLogoUrl;
     if (logoUrl) {
       brand?.classList.add("has-logo-image");
       element.classList.add("has-image");

@@ -1,6 +1,7 @@
 {
   "brand": {
-    "logoImageUrl": "/media/logo.png?v=20260506-logo-png"
+    "headerLogoImageUrl": "/media/logo-black.png?v=20260506-split-logo",
+    "footerLogoImageUrl": "/media/logo-white.png?v=20260506-split-logo"
   },
   "homeHero": {
     "slides": [
