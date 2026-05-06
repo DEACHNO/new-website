@@ -17,7 +17,7 @@ const serviceItems = {
   customs: {
     key: "customs",
     tab: "清关·查验",
-    title: "通关 · 检查",
+    title: "通关·检查",
     text: "凭借广博深厚的专业学识，以及久经沉淀的丰富经验，全方位助力进出口货物合法依规、高效快捷地通过行政许可流程，确保每一次货物流转都畅行无阻。",
     mediaClass: "service-media-customs",
     illustration: `
