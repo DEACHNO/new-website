@@ -527,10 +527,13 @@ function applyBrandAssets(siteAssets) {
   const brandMarks = document.querySelectorAll(".brand-mark");
 
   brandMarks.forEach((element) => {
+    const brand = element.closest(".brand");
     if (logoUrl) {
+      brand?.classList.add("has-logo-image");
       element.classList.add("has-image");
       element.style.backgroundImage = `url('${logoUrl}')`;
     } else {
+      brand?.classList.remove("has-logo-image");
       element.classList.remove("has-image");
       element.style.backgroundImage = "";
     }

@@ -90,6 +90,10 @@ img {
   flex-shrink: 0;
 }
 
+.brand.has-logo-image {
+  gap: 0;
+}
+
 .brand-mark {
   position: relative;
   width: 44px;
@@ -107,8 +111,8 @@ img {
   background-repeat: no-repeat;
   background-size: contain;
   border-radius: 0;
-  width: 170px;
-  height: 48px;
+  width: 196px;
+  height: 56px;
 }
 
 .brand-mark::before,
@@ -140,6 +144,10 @@ img {
 }
 
 .brand-mark.has-image + .brand-copy {
+  display: none;
+}
+
+.brand.has-logo-image .brand-copy {
   display: none;
 }
 
