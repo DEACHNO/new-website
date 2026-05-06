@@ -105,7 +105,10 @@ img {
   background-color: #fff;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
+  border-radius: 0;
+  width: 154px;
+  height: 48px;
 }
 
 .brand-mark::before,
@@ -133,6 +136,10 @@ img {
 
 .brand-mark.has-image::before,
 .brand-mark.has-image::after {
+  display: none;
+}
+
+.brand-mark.has-image + .brand-copy {
   display: none;
 }
 
