@@ -708,9 +708,9 @@ img {
 .about-card-inner {
   position: relative;
   z-index: 1;
-  max-width: 430px;
+  max-width: 540px;
   margin-left: auto;
-  padding: 72px 72px 62px 28px;
+  padding: 70px 96px 58px 28px;
 }
 
 .about-card h2,
@@ -722,12 +722,12 @@ img {
 
 .about-card p,
 .contact-card p {
-  line-height: 1.95;
+  line-height: 1.78;
   font-size: 14px;
 }
 
 .about-card .btn {
-  margin-top: 30px;
+  margin-top: 24px;
   min-width: 108px;
   min-height: 34px;
   padding: 0 14px;
