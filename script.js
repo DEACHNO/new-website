@@ -49,7 +49,7 @@ const serviceItems = {
 const noticesApiUrl = "/api/notices";
 const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
-const siteAssetsFallbackUrl = "/data/site-assets.json";
+const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260506-split-logo2";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 
@@ -132,7 +132,8 @@ const defaultNotices = [
 
 const defaultSiteAssets = {
   brand: {
-    logoImageUrl: ""
+    headerLogoImageUrl: "/media/logo-black.png?v=20260506-split-logo2",
+    footerLogoImageUrl: "/media/logo-white.png?v=20260506-split-logo2"
   },
   homeHero: {
     slides: [
