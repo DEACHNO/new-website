@@ -521,19 +521,28 @@ function serviceCenterPage(siteAssets) {
       key: "booking",
       label: "ブッキング",
       heading: "国际货物的订舱服务",
-      description: serviceItems.booking.text
+      description: serviceItems.booking.text,
+      imageUrl: "/media/service-customs.jpg",
+      imageAlt: "国际货物订舱服务",
+      imageClass: "service-center-focus-top"
     },
     {
       key: "customs",
       label: "通関・検査",
       heading: "进出口的通关业务",
-      description: serviceItems.customs.text
+      description: serviceItems.customs.text,
+      imageUrl: "/media/service-booking.jpg",
+      imageAlt: "进出口通关业务",
+      imageClass: "service-center-focus-bottom"
     },
     {
       key: "warehouse",
       label: "仓储配送服务",
       heading: "配送服务",
-      description: serviceItems.warehouse.text
+      description: serviceItems.warehouse.text,
+      imageUrl: "/media/service-warehouse.jpg",
+      imageAlt: "仓储配送服务",
+      imageClass: "service-center-focus-bottom-left"
     }
   ];
   const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
@@ -551,14 +560,15 @@ function serviceCenterPage(siteAssets) {
           ${serviceCenterItems
             .map((item, index) => {
               const asset = getServiceAsset(siteAssets, item.key);
-              const imageUrl = asset.imageUrl || "";
-              const alt = asset.imageAlt || item.label;
+              const imageUrl = item.imageUrl || asset.imageUrl || "";
+              const alt = item.imageAlt || asset.imageAlt || item.label;
+              const imageClass = item.imageClass ? ` class="${escapeHtml(item.imageClass)}"` : "";
 
               return `
                 <article class="service-center-item ${index % 2 === 1 ? "is-reversed" : ""}">
                   <div class="service-center-label">${escapeHtml(item.label)}</div>
                   <div class="service-center-media">
-                    ${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(alt)}">` : serviceMediaMarkup(serviceItems[item.key], asset)}
+                    ${imageUrl ? `<img${imageClass} src="${escapeHtml(imageUrl)}" alt="${escapeHtml(alt)}">` : serviceMediaMarkup(serviceItems[item.key], asset)}
                   </div>
                   <div class="service-center-copy">
                     <h2>${escapeHtml(item.heading)}</h2>
