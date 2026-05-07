@@ -963,6 +963,12 @@ img {
   transform-origin: top center;
 }
 
+.service-detail-focus-brand-top {
+  inset: 0 auto auto 0;
+  transform: scale(1.6);
+  transform-origin: top center;
+}
+
 .service-detail-copy {
   padding-top: 4px;
   color: #11182c;

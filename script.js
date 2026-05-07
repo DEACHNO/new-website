@@ -534,9 +534,28 @@ function serviceDetailPage(type = "1") {
         "公司持有一级货运代理资质，具备直接与船运公司谈判的资格，能够为您提供极具竞争力的最低海运价格。",
         "倘若您有任何疑问或需求，请随时联系我们。即使您是初次涉足海外货物进出口业务，也能毫无负担地享受优质物流服务，这正是我司优势所在。如您正在为国际货物运输探寻最佳方案，欢迎即刻与我们联系"
       ]
+    },
+    "2": {
+      title: "清关·查验详情",
+      sectionTitle: "清关·查验",
+      heroImageUrl: "/media/service-customs.jpg",
+      primaryImageUrl: "/media/service-brand-bg.jpg",
+      secondaryImageUrl: "/media/service-booking.jpg",
+      primaryAlt: "现场查验与物流协调",
+      secondaryAlt: "通关业务现场协作",
+      primaryClass: "service-detail-focus-brand-top",
+      secondaryClass: "service-detail-focus-bottom",
+      intro: [
+        "为助力客户顺畅开展进出口贸易，我们提供申报所需文件制作、关税缴纳、审查、海关查验见证等代理服务。"
+      ],
+      followup: [
+        "本公司驻有经验丰富的报关员，他们积极与海关协调，精准完成各类繁琐文件的准备、申报、精确计算并支付税金，仔细确认国际物流相关法令，全方位助力客户，达成其期待的高效畅达的国际物流运作。"
+      ]
     }
   };
   const detail = details[type] || details["1"];
+  const primaryClass = detail.primaryClass || "service-detail-focus-bottom";
+  const secondaryClass = detail.secondaryClass || "service-detail-focus-top";
 
   return `
     <div class="page-shell service-detail-page">
@@ -552,7 +571,7 @@ function serviceDetailPage(type = "1") {
 
           <article class="service-detail-block">
             <div class="service-detail-media">
-              <img class="service-detail-focus-bottom" src="${escapeHtml(detail.primaryImageUrl)}" alt="${escapeHtml(detail.primaryAlt)}">
+              <img class="${escapeHtml(primaryClass)}" src="${escapeHtml(detail.primaryImageUrl)}" alt="${escapeHtml(detail.primaryAlt)}">
             </div>
             <div class="service-detail-copy">
               ${detail.intro.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
@@ -564,7 +583,7 @@ function serviceDetailPage(type = "1") {
               ${detail.followup.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
             </div>
             <div class="service-detail-media">
-              <img class="service-detail-focus-top" src="${escapeHtml(detail.secondaryImageUrl)}" alt="${escapeHtml(detail.secondaryAlt)}">
+              <img class="${escapeHtml(secondaryClass)}" src="${escapeHtml(detail.secondaryImageUrl)}" alt="${escapeHtml(detail.secondaryAlt)}">
             </div>
           </article>
         </div>
