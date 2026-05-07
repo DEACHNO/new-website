@@ -639,11 +639,6 @@ async function render() {
     return;
   }
 
-  if (route === "/workspace") {
-    app.innerHTML = placeholderPage("我的工作台", "登录后可查看订单、下载单据和处理消息。");
-    return;
-  }
-
   if (route !== "/home" && route !== "/news") {
     location.replace("#/home");
     return;
