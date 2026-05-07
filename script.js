@@ -384,7 +384,7 @@ function homePage(items, siteAssets) {
             <div class="service-content">
               <h3 id="service-title">${escapeHtml(initial.title)}</h3>
               <p id="service-text">${escapeHtml(initial.text)}</p>
-              <a class="text-link" href="#/service">查看更多</a>
+              <a class="text-link" href="#/serviceCenter">查看更多</a>
             </div>
           </article>
         </div>
@@ -515,13 +515,75 @@ function errorPage() {
   `;
 }
 
+function serviceCenterPage(siteAssets) {
+  const serviceCenterItems = [
+    {
+      key: "booking",
+      label: "ブッキング",
+      heading: "国际货物的订舱服务",
+      description: serviceItems.booking.text
+    },
+    {
+      key: "customs",
+      label: "通関・検査",
+      heading: "进出口的通关业务",
+      description: serviceItems.customs.text
+    },
+    {
+      key: "warehouse",
+      label: "仓储配送服务",
+      heading: "配送服务",
+      description: serviceItems.warehouse.text
+    }
+  ];
+  const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
+
+  return `
+    <div class="page-shell service-center-page">
+      <section class="service-center-hero" style="background-image: linear-gradient(90deg, rgba(11, 17, 25, 0.16), rgba(11, 17, 25, 0.08)), url('${escapeHtml(heroImageUrl)}');">
+        <div class="container service-center-hero-inner">
+          <h1>全力打造理想物流方案的货运先锋</h1>
+        </div>
+      </section>
+
+      <section class="service-center-list">
+        <div class="container service-center-list-inner">
+          ${serviceCenterItems
+            .map((item, index) => {
+              const asset = getServiceAsset(siteAssets, item.key);
+              const imageUrl = asset.imageUrl || "";
+              const alt = asset.imageAlt || item.label;
+
+              return `
+                <article class="service-center-item ${index % 2 === 1 ? "is-reversed" : ""}">
+                  <div class="service-center-label">${escapeHtml(item.label)}</div>
+                  <div class="service-center-media">
+                    ${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(alt)}">` : serviceMediaMarkup(serviceItems[item.key], asset)}
+                  </div>
+                  <div class="service-center-copy">
+                    <h2>${escapeHtml(item.heading)}</h2>
+                    <p>${escapeHtml(item.description)}</p>
+                    <a class="text-link" href="#/serviceCenter">查看详情</a>
+                  </div>
+                </article>
+              `;
+            })
+            .join("")}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 function normalizeRoute(hash) {
   return hash.replace(/^#/, "") || "/home";
 }
 
 function setActiveNav(route) {
+  const activeRoute = route === "/service" ? "/serviceCenter" : route;
+
   navLinks.forEach((link) => {
-    link.classList.toggle("is-active", link.dataset.route === route);
+    link.classList.toggle("is-active", link.dataset.route === activeRoute);
   });
 }
 
@@ -545,11 +607,15 @@ function applyBrandAssets(siteAssets) {
   });
 }
 
-function initHeroCarousel(siteAssets) {
+function stopHeroCarousel() {
   if (heroCarouselTimer) {
     window.clearInterval(heroCarouselTimer);
     heroCarouselTimer = null;
   }
+}
+
+function initHeroCarousel(siteAssets) {
+  stopHeroCarousel();
 
   const slides = getHomeHeroSlides(siteAssets);
   const slideElements = Array.from(document.querySelectorAll("[data-hero-slide]"));
@@ -663,9 +729,21 @@ function bindLoginRequiredModal() {
 async function render() {
   const route = normalizeRoute(location.hash);
   setActiveNav(route);
+  stopHeroCarousel();
 
-  if (route === "/service") {
-    app.innerHTML = placeholderPage("业务中心", "服务详情页可继续在这里扩展，当前已将首页“服务项目介绍”调整为三部分展示。");
+  if (route === "/service" || route === "/serviceCenter") {
+    app.innerHTML = loadingPage();
+
+    try {
+      const siteAssets = await loadSiteAssets();
+      applyBrandAssets(siteAssets);
+      app.innerHTML = serviceCenterPage(siteAssets);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } catch (error) {
+      console.error(error);
+      app.innerHTML = errorPage();
+    }
+
     return;
   }
 

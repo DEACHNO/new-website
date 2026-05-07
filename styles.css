@@ -701,6 +701,142 @@ img {
   margin-left: 10px;
 }
 
+.service-center-page {
+  background: #fff;
+}
+
+.service-center-hero {
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.service-center-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 18, 28, 0.1), rgba(15, 18, 28, 0.2));
+}
+
+.service-center-hero-inner {
+  position: relative;
+  z-index: 1;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.service-center-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(38px, 4.2vw, 58px);
+  line-height: 1.14;
+  font-weight: 700;
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+.service-center-list {
+  padding: 76px 0 96px;
+  background: #fff;
+}
+
+.service-center-list-inner {
+  max-width: 1080px;
+}
+
+.service-center-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  grid-template-areas:
+    "label label"
+    "media copy";
+  gap: 32px 54px;
+  align-items: center;
+  padding-bottom: 78px;
+}
+
+.service-center-item + .service-center-item {
+  padding-top: 44px;
+  border-top: 1px solid rgba(20, 20, 39, 0.08);
+}
+
+.service-center-item.is-reversed {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  grid-template-areas:
+    "label label"
+    "copy media";
+}
+
+.service-center-label {
+  grid-area: label;
+  color: var(--red);
+  font-size: clamp(30px, 3vw, 38px);
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.service-center-media {
+  grid-area: media;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  min-height: 324px;
+  overflow: hidden;
+  background: #eef1f4;
+  box-shadow: var(--shadow-soft);
+}
+
+.service-center-media img,
+.service-center-media > .service-media {
+  width: 100%;
+  height: 100%;
+  min-height: 324px;
+}
+
+.service-center-media img {
+  object-fit: cover;
+}
+
+.service-center-media > .service-media {
+  box-shadow: none;
+}
+
+.service-center-copy {
+  grid-area: copy;
+  min-height: 324px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.service-center-copy h2 {
+  margin: 0 0 54px;
+  color: #080b18;
+  font-size: clamp(24px, 2.2vw, 30px);
+  line-height: 1.28;
+  font-weight: 600;
+}
+
+.service-center-copy p {
+  margin: 0;
+  color: #151b2a;
+  font-size: 16px;
+  line-height: 2;
+}
+
+.service-center-copy .text-link {
+  margin-top: auto;
+  align-self: flex-end;
+}
+
 .schedule-table {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1179,8 +1315,27 @@ img {
   }
 
   .service-panel,
-  .split-grid {
+  .split-grid,
+  .service-center-item,
+  .service-center-item.is-reversed {
     grid-template-columns: 1fr;
+  }
+
+  .service-center-item,
+  .service-center-item.is-reversed {
+    grid-template-areas:
+      "label"
+      "media"
+      "copy";
+    gap: 24px;
+  }
+
+  .service-center-copy {
+    min-height: auto;
+  }
+
+  .service-center-copy h2 {
+    margin-bottom: 24px;
   }
 
   .about-card {
@@ -1251,7 +1406,8 @@ img {
   .section-heading h2,
   .about-card h2,
   .contact-card h2,
-  .news-hero-copy h1 {
+  .news-hero-copy h1,
+  .service-center-hero h1 {
     font-size: 36px;
   }
 
@@ -1294,6 +1450,38 @@ img {
 
   .service-content {
     min-height: auto;
+  }
+
+  .service-center-hero,
+  .service-center-hero-inner {
+    min-height: 300px;
+  }
+
+  .service-center-list {
+    padding: 52px 0 68px;
+  }
+
+  .service-center-item {
+    padding-bottom: 56px;
+  }
+
+  .service-center-item + .service-center-item {
+    padding-top: 34px;
+  }
+
+  .service-center-label {
+    font-size: 28px;
+  }
+
+  .service-center-media,
+  .service-center-media img,
+  .service-center-media > .service-media {
+    min-height: 260px;
+  }
+
+  .service-center-copy .text-link {
+    align-self: flex-start;
+    margin-top: 28px;
   }
 
   .schedule-head,
