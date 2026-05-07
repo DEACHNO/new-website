@@ -639,6 +639,11 @@ async function render() {
     return;
   }
 
+  if (route === "/workspace") {
+    app.innerHTML = placeholderPage("我的工作台", "请先登录后查看工作台。");
+    return;
+  }
+
   if (route !== "/home" && route !== "/news") {
     location.replace("#/home");
     return;
