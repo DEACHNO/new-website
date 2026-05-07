@@ -515,6 +515,82 @@ function errorPage() {
   `;
 }
 
+function serviceDetailPage(type = "1") {
+  const details = {
+    "1": {
+      title: "订舱服务详情",
+      sectionTitle: "关于订舱",
+      heroImageUrl: "/media/service-customs.jpg",
+      primaryImageUrl: "/media/service-booking.jpg",
+      secondaryImageUrl: "/media/service-customs.jpg",
+      primaryAlt: "航空货物订舱服务",
+      secondaryAlt: "国际海运订舱服务",
+      intro: [
+        "本公司专为有整箱（FCL）及拼箱（LCL）等货物国际运输需求的客户，以最优方式妥善安排船运或航空舱位，确保货物在指定日期前送达目的地。",
+        "公司的专业团队成员，皆秉持着诚挚热忱的服务理念，深度融入客户视角，耐心倾听您的每一项需求与期望，凭借深厚的物流知识与行业经验，为客户量身定制最佳运输方案。在费用方面，我们坚守透明公正的原则，提供快速、精准的报价服务，报价清晰透明，绝无任何隐藏的额外费用，致力于为客户打造安心、省心的运输体验。"
+      ],
+      followup: [
+        "作为全球化企业，我们凭借强大实力，承接各地港口货物运输，包括偏港，都能为您妥善处理。",
+        "公司持有一级货运代理资质，具备直接与船运公司谈判的资格，能够为您提供极具竞争力的最低海运价格。",
+        "倘若您有任何疑问或需求，请随时联系我们。即使您是初次涉足海外货物进出口业务，也能毫无负担地享受优质物流服务，这正是我司优势所在。如您正在为国际货物运输探寻最佳方案，欢迎即刻与我们联系"
+      ]
+    }
+  };
+  const detail = details[type] || details["1"];
+
+  return `
+    <div class="page-shell service-detail-page">
+      <section class="service-detail-hero" style="background-image: linear-gradient(90deg, rgba(10, 18, 30, 0.3), rgba(10, 18, 30, 0.04)), url('${escapeHtml(detail.heroImageUrl)}');">
+        <div class="container service-detail-hero-inner">
+          <h1>${escapeHtml(detail.title)}</h1>
+        </div>
+      </section>
+
+      <section class="service-detail-section">
+        <div class="container service-detail-inner">
+          <h2>${escapeHtml(detail.sectionTitle)}</h2>
+
+          <article class="service-detail-block">
+            <div class="service-detail-media">
+              <img class="service-detail-focus-bottom" src="${escapeHtml(detail.primaryImageUrl)}" alt="${escapeHtml(detail.primaryAlt)}">
+            </div>
+            <div class="service-detail-copy">
+              ${detail.intro.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+            </div>
+          </article>
+
+          <article class="service-detail-block is-reversed">
+            <div class="service-detail-copy">
+              ${detail.followup.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+            </div>
+            <div class="service-detail-media">
+              <img class="service-detail-focus-top" src="${escapeHtml(detail.secondaryImageUrl)}" alt="${escapeHtml(detail.secondaryAlt)}">
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-split">
+        <div class="container split-grid">
+          <article class="about-card">
+            <div class="about-card-inner">
+              <h2>关于我们</h2>
+              <p>上海新悦航运有限公司，已正式获中国交通运输部认可，荣膺无船承运人（NVOCC）资质。凭借专业与实力，公司以“上海新悦”之名广为人知，且作为上海航运交易所(Shanghai shipping Exchange)的正式会员，我司始终专注于海运、空运领域，深耕中国至日本市场，业务规模持续拓展，服务品质稳步提升。展望未来，我们将坚守初心，致力于优化货物运输流程，不断提升运输效率与服务质量，为全球客户打造更卓越、更省心的物流体验。</p>
+              <a class="btn btn-light" href="#/about">查看更多</a>
+            </div>
+          </article>
+
+          <article class="contact-card">
+            <h2>联系我们</h2>
+            <p>如果您在物流方面有任何疑问，欢迎随时与我们联系。</p>
+            <a class="btn btn-primary wide" href="#/contact">查看更多</a>
+          </article>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 function serviceCenterPage(siteAssets) {
   const serviceCenterItems = [
     {
@@ -573,7 +649,7 @@ function serviceCenterPage(siteAssets) {
                   <div class="service-center-copy">
                     <h2>${escapeHtml(item.heading)}</h2>
                     <p>${escapeHtml(item.description)}</p>
-                    <a class="text-link" href="#/serviceCenter">查看详情</a>
+                    <a class="text-link" href="#/serviceDetail?type=${index + 1}">查看详情</a>
                   </div>
                 </article>
               `;
@@ -607,8 +683,13 @@ function normalizeRoute(hash) {
   return hash.replace(/^#/, "") || "/home";
 }
 
+function routePath(route) {
+  return route.split("?")[0];
+}
+
 function setActiveNav(route) {
-  const activeRoute = route === "/service" ? "/serviceCenter" : route;
+  const path = routePath(route);
+  const activeRoute = path === "/service" || path === "/serviceDetail" ? "/serviceCenter" : path;
 
   navLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.route === activeRoute);
@@ -756,10 +837,11 @@ function bindLoginRequiredModal() {
 
 async function render() {
   const route = normalizeRoute(location.hash);
+  const path = routePath(route);
   setActiveNav(route);
   stopHeroCarousel();
 
-  if (route === "/service" || route === "/serviceCenter") {
+  if (path === "/service" || path === "/serviceCenter") {
     app.innerHTML = loadingPage();
 
     try {
@@ -775,17 +857,34 @@ async function render() {
     return;
   }
 
-  if (route === "/tracking") {
+  if (path === "/serviceDetail") {
+    app.innerHTML = loadingPage();
+
+    try {
+      const siteAssets = await loadSiteAssets();
+      const params = new URLSearchParams(route.split("?")[1] || "");
+      applyBrandAssets(siteAssets);
+      app.innerHTML = serviceDetailPage(params.get("type") || "1");
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } catch (error) {
+      console.error(error);
+      app.innerHTML = errorPage();
+    }
+
+    return;
+  }
+
+  if (path === "/tracking") {
     app.innerHTML = placeholderPage("货物追踪", "这里可以接入提单号、箱号或订单号查询功能。");
     return;
   }
 
-  if (route === "/about") {
+  if (path === "/about") {
     app.innerHTML = placeholderPage("关于我们", "公司介绍、资质证书与发展历程可在此继续补充。");
     return;
   }
 
-  if (route !== "/home" && route !== "/news") {
+  if (path !== "/home" && path !== "/news") {
     location.replace("#/home");
     return;
   }
@@ -795,7 +894,7 @@ async function render() {
   try {
     const [notices, siteAssets] = await Promise.all([loadNotices(), loadSiteAssets()]);
     applyBrandAssets(siteAssets);
-    app.innerHTML = route === "/home" ? homePage(notices, siteAssets) : newsPage(notices, siteAssets);
+    app.innerHTML = path === "/home" ? homePage(notices, siteAssets) : newsPage(notices, siteAssets);
     bindServiceTabs(siteAssets);
     initHeroCarousel(siteAssets);
     window.scrollTo({ top: 0, behavior: "auto" });
