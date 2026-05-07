@@ -581,6 +581,24 @@ function serviceCenterPage(siteAssets) {
             .join("")}
         </div>
       </section>
+
+      <section class="section section-split">
+        <div class="container split-grid">
+          <article class="about-card">
+            <div class="about-card-inner">
+              <h2>关于我们</h2>
+              <p>上海新悦航运有限公司，已正式获中国交通运输部认可，荣膺无船承运人（NVOCC）资质。凭借专业与实力，公司以“上海新悦”之名广为人知，且作为上海航运交易所(Shanghai shipping Exchange)的正式会员，我司始终专注于海运、空运领域，深耕中国至日本市场，业务规模持续拓展，服务品质稳步提升。展望未来，我们将坚守初心，致力于优化货物运输流程，不断提升运输效率与服务质量，为全球客户打造更卓越、更省心的物流体验。</p>
+              <a class="btn btn-light" href="#/about">查看更多</a>
+            </div>
+          </article>
+
+          <article class="contact-card">
+            <h2>联系我们</h2>
+            <p>如果您在物流方面有任何疑问，欢迎随时与我们联系。</p>
+            <a class="btn btn-primary wide" href="#/contact">查看更多</a>
+          </article>
+        </div>
+      </section>
     </div>
   `;
 }
