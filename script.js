@@ -52,6 +52,9 @@ const siteAssetsApiUrl = "/api/site-assets";
 const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260506-split-logo2";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
+const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
+const loginRequiredModal = document.querySelector("#login-required-modal");
+const loginModalCloseButtons = Array.from(document.querySelectorAll("[data-login-modal-close]"));
 
 let noticesCache = null;
 let siteAssetsCache = null;
@@ -620,6 +623,43 @@ function bindServiceTabs(siteAssets) {
   });
 }
 
+function openLoginRequiredModal() {
+  if (!loginRequiredModal) {
+    return;
+  }
+
+  loginRequiredModal.classList.add("is-open");
+  loginRequiredModal.setAttribute("aria-hidden", "false");
+}
+
+function closeLoginRequiredModal() {
+  if (!loginRequiredModal) {
+    return;
+  }
+
+  loginRequiredModal.classList.remove("is-open");
+  loginRequiredModal.setAttribute("aria-hidden", "true");
+}
+
+function bindLoginRequiredModal() {
+  loginRequiredLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      openLoginRequiredModal();
+    });
+  });
+
+  loginModalCloseButtons.forEach((button) => {
+    button.addEventListener("click", closeLoginRequiredModal);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeLoginRequiredModal();
+    }
+  });
+}
+
 async function render() {
   const route = normalizeRoute(location.hash);
   setActiveNav(route);
@@ -636,11 +676,6 @@ async function render() {
 
   if (route === "/about") {
     app.innerHTML = placeholderPage("关于我们", "公司介绍、资质证书与发展历程可在此继续补充。");
-    return;
-  }
-
-  if (route === "/workspace") {
-    app.innerHTML = placeholderPage("我的工作台", "请先登录后查看工作台。");
     return;
   }
 
@@ -670,4 +705,5 @@ if (!location.hash) {
   render();
 }
 
+bindLoginRequiredModal();
 window.addEventListener("hashchange", render);
