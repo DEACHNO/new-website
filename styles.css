@@ -1755,6 +1755,12 @@ img {
 
 .related-menu button:hover {
   color: var(--red);
+  background: #fff4f3;
+}
+
+.related-menu button:focus-visible {
+  outline: 3px solid rgba(239, 58, 45, 0.28);
+  outline-offset: -3px;
 }
 
 .related-menu button.is-active {
@@ -1762,6 +1768,11 @@ img {
   background: var(--red);
   color: #fff;
   font-weight: 700;
+}
+
+.related-menu button.is-active:hover {
+  background: var(--red);
+  color: #fff;
 }
 
 .related-menu button.is-active::after {

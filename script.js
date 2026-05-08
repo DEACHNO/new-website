@@ -778,14 +778,28 @@ function relatedCompanyMarkup() {
       <div class="container">
         <h2 class="about-section-title related-title">关联公司 TOYO FAST TRANSPORT CO.,LTD.</h2>
         <div class="related-layout">
-          <div class="related-menu" aria-label="关联公司内容">
+          <div class="related-menu" role="tablist" aria-label="关联公司内容">
             ${sections.map((section, index) => `
-              <button class="${index === 0 ? "is-active" : ""}" type="button" data-related-tab="${escapeHtml(section.id)}">${escapeHtml(section.label)}</button>
+              <button
+                class="${index === 0 ? "is-active" : ""}"
+                id="related-tab-${escapeHtml(section.id)}"
+                type="button"
+                role="tab"
+                aria-selected="${index === 0 ? "true" : "false"}"
+                aria-controls="related-panel-${escapeHtml(section.id)}"
+                data-related-tab="${escapeHtml(section.id)}"
+              >${escapeHtml(section.label)}</button>
             `).join("")}
           </div>
           <div class="related-panel">
             ${sections.map((section, index) => `
-              <article class="related-panel-item ${index === 0 ? "is-active" : ""}" data-related-panel="${escapeHtml(section.id)}">
+              <article
+                class="related-panel-item ${index === 0 ? "is-active" : ""}"
+                id="related-panel-${escapeHtml(section.id)}"
+                role="tabpanel"
+                aria-labelledby="related-tab-${escapeHtml(section.id)}"
+                data-related-panel="${escapeHtml(section.id)}"
+              >
                 ${section.content}
               </article>
             `).join("")}
@@ -929,7 +943,7 @@ function bindTrackingPage() {
   });
 }
 
-function bindRelatedCompanyTabs() {
+function bindRelatedCompanyTabs(initialRelated = "overview") {
   const buttons = Array.from(document.querySelectorAll("[data-related-tab]"));
   const panels = Array.from(document.querySelectorAll("[data-related-panel]"));
 
@@ -937,24 +951,36 @@ function bindRelatedCompanyTabs() {
     return;
   }
 
+  const setActiveRelated = (target, shouldUpdateUrl = false) => {
+    const nextTarget = panels.some((panel) => panel.dataset.relatedPanel === target) ? target : "overview";
+
+    buttons.forEach((item) => {
+      const isActive = item.dataset.relatedTab === nextTarget;
+      item.classList.toggle("is-active", isActive);
+      item.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    panels.forEach((panel) => {
+      panel.classList.toggle("is-active", panel.dataset.relatedPanel === nextTarget);
+    });
+
+    if (shouldUpdateUrl) {
+      history.replaceState(null, "", `#/aboutUs?section=related&related=${encodeURIComponent(nextTarget)}`);
+    }
+  };
+
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      const target = button.dataset.relatedTab;
-
-      buttons.forEach((item) => {
-        item.classList.toggle("is-active", item === button);
-      });
-
-      panels.forEach((panel) => {
-        panel.classList.toggle("is-active", panel.dataset.relatedPanel === target);
-      });
+      setActiveRelated(button.dataset.relatedTab, true);
     });
   });
+
+  setActiveRelated(initialRelated, false);
 }
 
-function bindAboutPage(initialSection = "about-intro") {
+function bindAboutPage(initialSection = "about-intro", initialRelated = "overview") {
   const tabs = Array.from(document.querySelectorAll("[data-about-jump]"));
-  bindRelatedCompanyTabs();
+  bindRelatedCompanyTabs(initialRelated);
 
   const scrollToSection = (sectionId) => {
     const section = document.querySelector(`#${sectionId}`);
@@ -966,6 +992,15 @@ function bindAboutPage(initialSection = "about-intro") {
     tabs.forEach((tab) => {
       tab.classList.toggle("is-active", tab.dataset.aboutJump === sectionId);
     });
+
+    if (sectionId === "about-related") {
+      const activeRelated = document.querySelector("[data-related-tab].is-active")?.dataset.relatedTab || initialRelated;
+      history.replaceState(null, "", `#/aboutUs?section=related&related=${encodeURIComponent(activeRelated)}`);
+    } else if (sectionId === "about-contact") {
+      history.replaceState(null, "", "#/contact-us");
+    } else {
+      history.replaceState(null, "", "#/aboutUs");
+    }
 
     section.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -1452,10 +1487,17 @@ async function render() {
 
     try {
       const siteAssets = await loadSiteAssets();
-      const initialSection = path === "/contact" || path === "/contact-us" ? "about-contact" : "about-intro";
+      const params = new URLSearchParams(route.split("?")[1] || "");
+      const sectionParam = params.get("section");
+      const initialSection = sectionParam === "related"
+        ? "about-related"
+        : path === "/contact" || path === "/contact-us" || sectionParam === "contact"
+          ? "about-contact"
+          : "about-intro";
+      const initialRelated = params.get("related") || "overview";
       applyBrandAssets(siteAssets);
       app.innerHTML = aboutPage(siteAssets);
-      bindAboutPage(initialSection);
+      bindAboutPage(initialSection, initialRelated);
 
       if (initialSection === "about-intro") {
         window.scrollTo({ top: 0, behavior: "auto" });
