@@ -581,6 +581,13 @@ const officeMapPoints = [
   { lat: 35.6812, lng: 139.7671, zoom: 9 }
 ];
 
+function projectWorldPoint(point) {
+  return {
+    x: ((point.lng + 180) / 360) * 100,
+    y: ((90 - point.lat) / 180) * 100
+  };
+}
+
 function trackingPage(siteAssets) {
   const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
   const initialType = trackingSearchTypes[0];
@@ -834,8 +841,55 @@ function officeMapMarkup() {
               </button>
             `).join("")}
           </div>
-          <div class="office-map" data-office-map aria-label="公司网点可缩放地图">
-            <div class="office-map-fallback">地图加载中...</div>
+          <div class="office-map" data-office-map aria-label="公司网点世界地图">
+            <div class="world-map-toolbar" aria-label="地图缩放控制">
+              <button type="button" data-map-zoom-in aria-label="放大地图">+</button>
+              <button type="button" data-map-zoom-out aria-label="缩小地图">-</button>
+              <button type="button" data-map-reset>全图</button>
+            </div>
+            <div class="world-map-viewport" data-map-viewport>
+              <div class="world-map-canvas" data-map-canvas>
+                <svg class="world-map-svg" viewBox="0 0 1000 500" role="img" aria-label="世界地图示意">
+                  <defs>
+                    <pattern id="world-grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="1"/>
+                    </pattern>
+                  </defs>
+                  <rect class="map-ocean" width="1000" height="500"/>
+                  <rect width="1000" height="500" fill="url(#world-grid)"/>
+                  <path class="map-land" d="M85 145 130 102 190 86 250 112 300 154 286 196 322 238 275 278 216 266 170 312 116 286 92 230 54 196Z"/>
+                  <path class="map-land" d="M260 286 304 326 323 386 294 463 247 450 222 386 235 327Z"/>
+                  <path class="map-land" d="M474 120 560 88 671 104 760 132 826 178 814 236 746 250 704 294 620 278 584 228 524 238 454 210 418 164Z"/>
+                  <path class="map-land" d="M516 238 574 266 610 338 582 420 526 392 498 318Z"/>
+                  <path class="map-land" d="M825 332 886 350 918 402 874 432 812 408 794 362Z"/>
+                  <path class="map-land map-land-light" d="M820 196 846 186 865 206 858 234 828 232Z"/>
+                  <path class="map-land map-land-light" d="M368 92 402 80 436 98 426 126 386 124Z"/>
+                  <text class="world-map-label" x="145" y="128">NORTH AMERICA</text>
+                  <text class="world-map-label" x="260" y="362">SOUTH AMERICA</text>
+                  <text class="world-map-label" x="548" y="145">EUROPE / ASIA</text>
+                  <text class="world-map-label" x="535" y="320">AFRICA</text>
+                  <text class="world-map-label" x="822" y="386">AUSTRALIA</text>
+                  <text class="world-map-city" x="832" y="204">日本</text>
+                  <text class="world-map-city" x="832" y="224">Japan</text>
+                  <text class="world-map-city" x="825" y="238">中国</text>
+                </svg>
+                ${officeLocations.map((office, index) => {
+                  const point = projectWorldPoint(officeMapPoints[index]);
+
+                  return `
+                    <button
+                      class="world-map-marker ${index === 0 ? "is-active" : ""}"
+                      type="button"
+                      data-map-marker-index="${index}"
+                      style="left: ${point.x}%; top: ${point.y}%;"
+                    >
+                      <span class="world-map-pin"></span>
+                      <span class="world-map-marker-label">${escapeHtml(office.title)}</span>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -984,27 +1038,66 @@ function bindRelatedCompanyTabs(initialRelated = "overview") {
 function bindOfficeMap() {
   const officeCards = Array.from(document.querySelectorAll("[data-office-index]"));
   const mapElement = document.querySelector("[data-office-map]");
+  const viewport = document.querySelector("[data-map-viewport]");
+  const canvas = document.querySelector("[data-map-canvas]");
+  const markers = Array.from(document.querySelectorAll("[data-map-marker-index]"));
+  const zoomInButton = document.querySelector("[data-map-zoom-in]");
+  const zoomOutButton = document.querySelector("[data-map-zoom-out]");
+  const resetButton = document.querySelector("[data-map-reset]");
 
-  if (!officeCards.length || !mapElement) {
+  if (!officeCards.length || !mapElement || !viewport || !canvas) {
     return;
   }
 
-  const canUseMap = typeof window.L !== "undefined";
-  let map;
-  let markers = [];
+  const state = {
+    scale: 1,
+    x: 0,
+    y: 0
+  };
+  const minScale = 1;
+  const maxScale = 6;
+  let isDragging = false;
+  let dragStart = { x: 0, y: 0 };
 
-  const popupMarkup = (office) => `
-    <div class="office-popup">
-      <strong>${escapeHtml(office.title)}</strong>
-      <span>地址：${escapeHtml(office.address)}</span>
-      <span>电话：${escapeHtml(office.phone)}</span>
-    </div>
-  `;
+  const applyTransform = () => {
+    canvas.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+  };
+
+  const clampScale = (value) => Math.min(maxScale, Math.max(minScale, value));
+
+  const zoomAt = (nextScale, originX, originY) => {
+    const scale = clampScale(nextScale);
+    const ratio = scale / state.scale;
+
+    state.x = originX - (originX - state.x) * ratio;
+    state.y = originY - (originY - state.y) * ratio;
+    state.scale = scale;
+    applyTransform();
+  };
+
+  const showWorld = () => {
+    state.scale = 1;
+    state.x = 0;
+    state.y = 0;
+    applyTransform();
+  };
+
+  const centerOnPoint = (index) => {
+    const point = officeMapPoints[index] || officeMapPoints[0];
+    const projected = projectWorldPoint(point);
+    const viewportRect = viewport.getBoundingClientRect();
+    const targetScale = clampScale(point.zoom >= 12 ? 4.2 : 3.3);
+    const targetX = (projected.x / 100) * viewportRect.width;
+    const targetY = (projected.y / 100) * viewportRect.height;
+
+    state.scale = targetScale;
+    state.x = viewportRect.width / 2 - targetX * targetScale;
+    state.y = viewportRect.height / 2 - targetY * targetScale;
+    applyTransform();
+  };
 
   const setOffice = (targetCard, shouldMoveMap = true) => {
     const index = Number(targetCard.dataset.officeIndex || 0);
-    const office = officeLocations[index] || officeLocations[0];
-    const point = officeMapPoints[index] || officeMapPoints[0];
 
     officeCards.forEach((card) => {
       const isActive = card === targetCard;
@@ -1012,74 +1105,76 @@ function bindOfficeMap() {
       card.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
 
-    if (!map || !point) {
-      return;
-    }
+    markers.forEach((marker) => {
+      marker.classList.toggle("is-active", Number(marker.dataset.mapMarkerIndex || 0) === index);
+    });
 
-    if (shouldMoveMap) {
-      map.flyTo([point.lat, point.lng], point.zoom || 11, { duration: 0.55 });
-    }
-
-    markers[index]?.openPopup();
+    if (shouldMoveMap) centerOnPoint(index);
   };
 
   officeCards.forEach((card) => {
     card.addEventListener("click", () => setOffice(card));
   });
 
-  if (!canUseMap) {
-    mapElement.classList.add("is-unavailable");
-    return;
-  }
-
-  const markerIcon = window.L.divIcon({
-    className: "office-leaflet-pin",
-    html: "<span></span>",
-    iconSize: [34, 42],
-    iconAnchor: [17, 42],
-    popupAnchor: [0, -38]
+  markers.forEach((marker) => {
+    marker.addEventListener("click", () => {
+      const index = Number(marker.dataset.mapMarkerIndex || 0);
+      const card = officeCards[index];
+      if (card) setOffice(card, true);
+    });
   });
 
-  map = window.L.map(mapElement, {
-    center: [32.2, 126.2],
-    zoom: 5,
-    minZoom: 3,
-    maxZoom: 18,
-    scrollWheelZoom: true,
-    zoomControl: true
+  viewport.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const viewportRect = viewport.getBoundingClientRect();
+    const originX = event.clientX - viewportRect.left;
+    const originY = event.clientY - viewportRect.top;
+    const nextScale = state.scale * (event.deltaY < 0 ? 1.18 : 0.84);
+    zoomAt(nextScale, originX, originY);
+  }, { passive: false });
+
+  viewport.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    dragStart = {
+      x: event.clientX - state.x,
+      y: event.clientY - state.y
+    };
+    viewport.classList.add("is-dragging");
+    viewport.setPointerCapture(event.pointerId);
   });
 
-  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-
-  markers = officeLocations.map((office, index) => {
-    const point = officeMapPoints[index];
-
-    return window.L.marker([point.lat, point.lng], {
-      icon: markerIcon,
-      title: office.title
-    })
-      .addTo(map)
-      .bindTooltip(office.title, {
-        permanent: true,
-        direction: "top",
-        offset: [0, -39],
-        className: "office-map-label"
-      })
-      .bindPopup(popupMarkup(office))
-      .on("click", () => setOffice(officeCards[index], false));
+  viewport.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+    state.x = event.clientX - dragStart.x;
+    state.y = event.clientY - dragStart.y;
+    applyTransform();
   });
 
-  const bounds = window.L.latLngBounds(officeMapPoints.map((point) => [point.lat, point.lng]));
-  map.fitBounds(bounds, { padding: [42, 42] });
-  mapElement.classList.add("is-loaded");
+  const stopDragging = (event) => {
+    if (!isDragging) return;
+    isDragging = false;
+    viewport.classList.remove("is-dragging");
+    if (event.pointerId !== undefined) {
+      viewport.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  viewport.addEventListener("pointerup", stopDragging);
+  viewport.addEventListener("pointercancel", stopDragging);
+  zoomInButton?.addEventListener("click", () => {
+    const viewportRect = viewport.getBoundingClientRect();
+    zoomAt(state.scale * 1.25, viewportRect.width / 2, viewportRect.height / 2);
+  });
+  zoomOutButton?.addEventListener("click", () => {
+    const viewportRect = viewport.getBoundingClientRect();
+    zoomAt(state.scale / 1.25, viewportRect.width / 2, viewportRect.height / 2);
+  });
+  resetButton?.addEventListener("click", showWorld);
 
   window.setTimeout(() => {
-    map.invalidateSize();
     setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0], false);
-  }, 120);
+    showWorld();
+  }, 60);
 }
 
 function bindAboutPage(initialSection = "about-intro", initialRelated = "overview") {
