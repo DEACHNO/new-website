@@ -476,6 +476,434 @@ function newsPage(items, siteAssets) {
   `;
 }
 
+const trackingSearchTypes = [
+  {
+    value: "bill",
+    label: "HBL NO./ MBL NO./业务参考号",
+    placeholder: "HBL NO./ MBL NO./业务参考号 可使用逗号分隔，一次最多查询10个"
+  },
+  {
+    value: "container",
+    label: "箱号",
+    placeholder: "箱号 可使用逗号分隔，一次最多查询10个"
+  }
+];
+
+const aboutTimelineItems = [
+  {
+    label: "成立日",
+    value: ["2010年1月15日"]
+  },
+  {
+    label: "资本金",
+    value: ["1120万元（约2亿2000万日元）"]
+  },
+  {
+    label: "公司代表",
+    value: ["代表董事兼总经理", "盛晓东"]
+  },
+  {
+    label: "主要经营内容",
+    value: ["货物运输代理业务", "进出口通关代理业务", "进出口代理业务"]
+  },
+  {
+    label: "员工",
+    value: ["上海新悦120名"]
+  },
+  {
+    label: "年营业额",
+    value: ["2022年度 4,910,162,400日元", "2023年度 3,854,908,200日元", "……"]
+  }
+];
+
+const aboutBranches = [
+  {
+    title: "2002年上海总公司",
+    imageUrl: "/media/service-booking.jpg"
+  },
+  {
+    title: "2003年宁波分公司",
+    imageUrl: "/media/news-hero.jpg"
+  },
+  {
+    title: "2004年江阴分公司",
+    imageUrl: "/media/service-customs.jpg"
+  },
+  {
+    title: "2024年青岛分公司",
+    imageUrl: "/media/home-hero.jpg"
+  },
+  {
+    title: "2025年深圳分公司",
+    imageUrl: "/media/service-brand-bg.jpg"
+  }
+];
+
+const officeLocations = [
+  {
+    title: "上海总公司",
+    address: "上海市四川北路525号宇宏大厦9F 901室",
+    phone: "86-21-6309-3880"
+  },
+  {
+    title: "宁波分公司",
+    address: "宁波市鄞州区泰康中路468号奥丽赛豪如大厦2004室",
+    phone: "86-574-8386-6991"
+  },
+  {
+    title: "江阴分公司",
+    address: "江阴澄中路118号湾湖国际16楼E座",
+    phone: "86-510-8640-9795"
+  },
+  {
+    title: "青岛分公司",
+    address: "和达新都汇大厦324室",
+    phone: "86-532-5823-6699"
+  },
+  {
+    title: "深圳分公司",
+    address: "深圳市福田区新华保险大厦2303M房",
+    phone: "0755-23601514"
+  },
+  {
+    title: "日本关联公司",
+    address: "東洋ファストトランスポート TOYO FAST TRANSPORT CO., LTD.",
+    phone: "TOYO FAST TRANSPORT CO., LTD."
+  }
+];
+
+function trackingPage(siteAssets) {
+  const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
+  const initialType = trackingSearchTypes[0];
+
+  return `
+    <div class="tracking-page">
+      <section class="tracking-hero" style="background-image: linear-gradient(90deg, rgba(3, 18, 30, 0.86), rgba(3, 18, 30, 0.38) 48%, rgba(3, 18, 30, 0.08)), url('${escapeHtml(heroImageUrl)}');">
+        <div class="container tracking-hero-inner">
+          <div class="tracking-panel">
+            <h1>货物跟踪</h1>
+            <form class="tracking-form" data-tracking-form>
+              <label class="tracking-select-wrap">
+                <span class="sr-only">查询类型</span>
+                <select data-tracking-type>
+                  ${trackingSearchTypes.map((type) => `<option value="${escapeHtml(type.value)}">${escapeHtml(type.label)}</option>`).join("")}
+                </select>
+              </label>
+              <label class="tracking-input-wrap">
+                <span class="sr-only">查询编号</span>
+                <input data-tracking-input type="text" placeholder="${escapeHtml(initialType.placeholder)}">
+              </label>
+              <button class="tracking-submit" type="submit">查询</button>
+            </form>
+            <p class="tracking-message" data-tracking-message aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="tracking-empty" aria-label="查询结果区域">
+        <div class="container">
+          <div class="tracking-result-shell" data-tracking-result>
+            <span>请输入提单号、箱号或业务参考号进行查询。</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function aboutTimelineMarkup() {
+  return `
+    <div class="about-timeline" aria-label="公司信息">
+      ${aboutTimelineItems.map((item) => `
+        <div class="about-timeline-row">
+          <div class="about-timeline-label">${escapeHtml(item.label)}</div>
+          <div class="about-timeline-dot" aria-hidden="true"></div>
+          <div class="about-timeline-value">
+            ${item.value.map((line) => `<p>${escapeHtml(line)}</p>`).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function branchCardsMarkup() {
+  return `
+    <div class="branch-grid">
+      ${aboutBranches.map((branch) => `
+        <article class="branch-card" style="background-image: linear-gradient(180deg, rgba(12, 18, 32, 0.08), rgba(12, 18, 32, 0.58)), url('${escapeHtml(branch.imageUrl)}');">
+          <h3>${escapeHtml(branch.title)}</h3>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function qualificationMarkup() {
+  const qualifications = [
+    ["NVOCC certificate", "无船承运业务经营资格"],
+    ["Regular member of Shanghai shipping exchange certificate", "上海航运交易所正式会员"],
+    ["Air transport sales agency services certificate", "中国民用航空国际运输业务的指定一级代理"],
+    ["International Air Transport Association (IATA)", "中国航空运输协会（CATA）资格认可"],
+    ["ISO9001认证", "可自行签发提单（BL）"]
+  ];
+
+  return `
+    <section class="about-section about-qualification" id="about-qualification">
+      <div class="container">
+        <h2 class="about-section-title">公司资质</h2>
+        <div class="qualification-grid">
+          <div class="qualification-copy">
+            ${qualifications.map(([en, zh]) => `
+              <p>
+                <span>${escapeHtml(en)}</span>
+                <strong>${escapeHtml(zh)}</strong>
+              </p>
+            `).join("")}
+            <p>一级货运代理可直接向船舶公司订舱，提供更优惠的价格并获取更准确的信息。</p>
+            <p>上海航运交易所正式会员可提供更顺畅的服务，覆盖知识产权商品等特殊货物的无船承运服务。</p>
+          </div>
+          <div class="certificate-collage" aria-label="资质证书展示">
+            <span class="certificate-paper certificate-paper-a">NVOCC</span>
+            <span class="certificate-paper certificate-paper-b">CATA</span>
+            <span class="certificate-paper certificate-paper-c">IATA</span>
+            <span class="certificate-paper certificate-paper-d">ISO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function relatedCompanyMarkup() {
+  const flowSteps = ["工厂出货", "办理出口通关手续", "海运、空运运输", "指定仓库交货", "集装箱配送", "日本侧清关与卸载"];
+  const features = ["自行签发提单", "可直接向船公司订舱，提供更优惠的价格", "快速通关配送"];
+  const performance = ["2024年出口货物量达78000标准箱（TEU）以上", "可从中国所有港口出口", "中国国内客户（发货人）约20000家以上"];
+  const japan = ["可应对日本国内所有港口", "日本国内的客户超过7000家", "日本国内合作清关行"];
+
+  return `
+    <section class="about-section related-company" id="about-related">
+      <div class="container">
+        <h2 class="about-section-title related-title">关联公司 TOYO FAST TRANSPORT CO.,LTD.</h2>
+        <div class="related-layout">
+          <div class="related-menu" aria-label="关联公司内容">
+            <span class="is-active">公司概要</span>
+            <span>进出口流程图</span>
+            <span>公司特色</span>
+            <span>货物处理量的业绩表现</span>
+            <span>日本侧业绩</span>
+          </div>
+          <div class="related-panel">
+            <div class="related-overview">
+              <h3>公司概要</h3>
+              <dl>
+                <dt>公司名</dt>
+                <dd>株式会社 東洋ファストトランスポート<br>TOYO FAST TRANSPORT CO., LTD.</dd>
+                <dt>成立日</dt>
+                <dd>2010年1月15日</dd>
+                <dt>资本金</dt>
+                <dd>1000万日元</dd>
+                <dt>公司法人</dt>
+                <dd>代表董事兼总经理 盛晓亮</dd>
+                <dt>主要经营内容</dt>
+                <dd>货物运输 / 进出口通关代理业务 / 进出口代理业务</dd>
+              </dl>
+            </div>
+            <div class="related-flow">
+              <p>例如：中国出口到日本的情况</p>
+              <strong>从中国工厂出货到日本仓库纳品，都请放心交给我们！</strong>
+              <div class="flow-grid">
+                ${flowSteps.map((step) => `
+                  <div class="flow-step">
+                    <span aria-hidden="true"></span>
+                    <p>${escapeHtml(step)}</p>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+            <div class="related-columns">
+              <div>
+                <h3>公司特色</h3>
+                ${features.map((item, index) => `<p>${index + 1}. ${escapeHtml(item)}</p>`).join("")}
+              </div>
+              <div>
+                <h3>货物处理量的业绩表现</h3>
+                ${performance.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
+              </div>
+              <div>
+                <h3>日本侧业绩</h3>
+                ${japan.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function officeMapMarkup() {
+  return `
+    <section class="about-section about-contact-section" id="about-contact">
+      <div class="container">
+        <h2 class="about-section-title">联系我们</h2>
+        <div class="office-layout">
+          <div class="office-list">
+            ${officeLocations.map((office, index) => `
+              <article class="${index === 0 ? "is-active" : ""}">
+                <h3>${escapeHtml(office.title)}</h3>
+                <p>地址：${escapeHtml(office.address)}</p>
+                <p>电话：${escapeHtml(office.phone)}</p>
+              </article>
+            `).join("")}
+          </div>
+          <div class="office-map" aria-label="公司网点示意图">
+            <span class="map-line map-line-a"></span>
+            <span class="map-line map-line-b"></span>
+            <span class="map-pin map-pin-shanghai">上海总公司</span>
+            <span class="map-pin map-pin-ningbo">宁波</span>
+            <span class="map-pin map-pin-jiangyin">江阴</span>
+            <span class="map-pin map-pin-qingdao">青岛</span>
+            <span class="map-pin map-pin-shenzhen">深圳</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function aboutPage(siteAssets) {
+  const heroImageUrl = siteAssets?.aboutHero?.backgroundImageUrl || "/media/service-brand-bg.jpg";
+
+  return `
+    <div class="about-page" id="about-top">
+      <section class="about-hero-page" style="background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.32)), url('${escapeHtml(heroImageUrl)}');"></section>
+
+      <nav class="about-tabs" aria-label="关于我们页面导航">
+        <a class="is-active" href="#/aboutUs" data-about-jump="about-intro">新悦简介</a>
+        <a href="#/aboutUs" data-about-jump="about-related">关联公司</a>
+        <a href="#/contact-us" data-about-jump="about-contact">联系我们</a>
+      </nav>
+
+      <section class="about-section about-intro-section" id="about-intro">
+        <div class="container">
+          <h1 class="about-section-title">新悦简介</h1>
+          <div class="about-intro-grid">
+            <img src="/media/service-booking.jpg" alt="新悦航运海运服务">
+            <div class="about-intro-copy">
+              <p>上海新悦航运有限公司是一家获中国交通运输部正式认可，具备无船承运人（NVOCC）资质的货运代理公司，同时也是上海航运交易所的正式会员。此外，公司还获得中国航空运输协会（CATA）认可，成为中国民用航空国际运输业务的指定代理。</p>
+              <p>公司在中国国内港口以及全球各主要港口间构建了紧密的网络，为客户提供优质、高效且安全的物流服务。</p>
+            </div>
+          </div>
+          ${aboutTimelineMarkup()}
+        </div>
+      </section>
+
+      <section class="about-section branch-section">
+        <div class="container">
+          <h2 class="about-section-title">联系我们</h2>
+          ${branchCardsMarkup()}
+        </div>
+      </section>
+
+      <section class="about-section strength-section">
+        <div class="container">
+          <h2 class="about-section-title">海运方面的实力</h2>
+          <div class="strength-row">
+            <img src="/media/service-customs.jpg" alt="海运代理服务">
+            <div>
+              <p>我司除了提供整箱和拼箱的海运进出口货物的国际运输代理业务的一条龙服务以外，还可安排上门提货和将货物按时送达客户所指定地点等服务。</p>
+              <p>我司拥有日本、美洲、欧洲、澳洲等多条优势航线，并与多家船公司保持良好的合作关系。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section strength-section">
+        <div class="container">
+          <h2 class="about-section-title">空运方面的实力</h2>
+          <div class="strength-row is-reversed">
+            <div>
+              <p>公司与多家航空公司签订长期协议，在舱位和运费上拥有优势，早上9点前交货可安排当天班机，解决客户的紧急需求。</p>
+            </div>
+            <img src="/media/service-brand-bg.jpg" alt="空运服务">
+          </div>
+        </div>
+      </section>
+
+      ${qualificationMarkup()}
+      ${relatedCompanyMarkup()}
+      ${officeMapMarkup()}
+    </div>
+  `;
+}
+
+function bindTrackingPage() {
+  const form = document.querySelector("[data-tracking-form]");
+  const typeSelect = document.querySelector("[data-tracking-type]");
+  const input = document.querySelector("[data-tracking-input]");
+  const message = document.querySelector("[data-tracking-message]");
+  const result = document.querySelector("[data-tracking-result]");
+
+  if (!form || !typeSelect || !input || !message || !result) {
+    return;
+  }
+
+  typeSelect.addEventListener("change", () => {
+    const selected = trackingSearchTypes.find((item) => item.value === typeSelect.value) || trackingSearchTypes[0];
+    input.placeholder = selected.placeholder;
+    message.textContent = "";
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const query = input.value.trim();
+
+    if (!query) {
+      message.textContent = "请输入查询编号。";
+      result.innerHTML = "<span>请输入提单号、箱号或业务参考号进行查询。</span>";
+      return;
+    }
+
+    message.textContent = "";
+    result.innerHTML = `
+      <div class="tracking-result-card">
+        <strong>${escapeHtml(query)}</strong>
+        <span>追踪查询功能正在接入中，请联系客户服务获取最新状态。</span>
+      </div>
+    `;
+  });
+}
+
+function bindAboutPage(initialSection = "about-intro") {
+  const tabs = Array.from(document.querySelectorAll("[data-about-jump]"));
+
+  const scrollToSection = (sectionId) => {
+    const section = document.querySelector(`#${sectionId}`);
+
+    if (!section) {
+      return;
+    }
+
+    tabs.forEach((tab) => {
+      tab.classList.toggle("is-active", tab.dataset.aboutJump === sectionId);
+    });
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", (event) => {
+      event.preventDefault();
+      scrollToSection(tab.dataset.aboutJump);
+    });
+  });
+
+  if (initialSection !== "about-intro") {
+    window.requestAnimationFrame(() => scrollToSection(initialSection));
+  }
+}
+
 function placeholderPage(title, text) {
   return `
     <section class="placeholder-page">
@@ -727,7 +1155,19 @@ function routePath(route) {
 
 function setActiveNav(route) {
   const path = routePath(route);
-  const activeRoute = path === "/service" || path === "/serviceDetail" ? "/serviceCenter" : path;
+  let activeRoute = path;
+
+  if (path === "/service" || path === "/serviceDetail") {
+    activeRoute = "/serviceCenter";
+  }
+
+  if (path === "/tracking") {
+    activeRoute = "/orderTracking";
+  }
+
+  if (path === "/about" || path === "/contact" || path === "/contact-us") {
+    activeRoute = "/aboutUs";
+  }
 
   navLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.route === activeRoute);
@@ -912,13 +1352,41 @@ async function render() {
     return;
   }
 
-  if (path === "/tracking") {
-    app.innerHTML = placeholderPage("货物追踪", "这里可以接入提单号、箱号或订单号查询功能。");
+  if (path === "/tracking" || path === "/orderTracking") {
+    app.innerHTML = loadingPage();
+
+    try {
+      const siteAssets = await loadSiteAssets();
+      applyBrandAssets(siteAssets);
+      app.innerHTML = trackingPage(siteAssets);
+      bindTrackingPage();
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } catch (error) {
+      console.error(error);
+      app.innerHTML = errorPage();
+    }
+
     return;
   }
 
-  if (path === "/about") {
-    app.innerHTML = placeholderPage("关于我们", "公司介绍、资质证书与发展历程可在此继续补充。");
+  if (path === "/about" || path === "/aboutUs" || path === "/contact" || path === "/contact-us") {
+    app.innerHTML = loadingPage();
+
+    try {
+      const siteAssets = await loadSiteAssets();
+      const initialSection = path === "/contact" || path === "/contact-us" ? "about-contact" : "about-intro";
+      applyBrandAssets(siteAssets);
+      app.innerHTML = aboutPage(siteAssets);
+      bindAboutPage(initialSection);
+
+      if (initialSection === "about-intro") {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+    } catch (error) {
+      console.error(error);
+      app.innerHTML = errorPage();
+    }
+
     return;
   }
 
