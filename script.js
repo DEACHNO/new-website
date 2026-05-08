@@ -572,6 +572,15 @@ const officeLocations = [
   }
 ];
 
+const officeMapPoints = [
+  { x: 52, y: 52 },
+  { x: 58, y: 66 },
+  { x: 49, y: 43 },
+  { x: 42, y: 30 },
+  { x: 34, y: 76 },
+  { x: 78, y: 45 }
+];
+
 function trackingPage(siteAssets) {
   const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
   const initialType = trackingSearchTypes[0];
@@ -811,6 +820,9 @@ function relatedCompanyMarkup() {
 }
 
 function officeMapMarkup() {
+  const firstOffice = officeLocations[0];
+  const firstPoint = officeMapPoints[0];
+
   return `
     <section class="about-section about-contact-section" id="about-contact">
       <div class="container">
@@ -818,21 +830,32 @@ function officeMapMarkup() {
         <div class="office-layout">
           <div class="office-list">
             ${officeLocations.map((office, index) => `
-              <article class="${index === 0 ? "is-active" : ""}">
-                <h3>${escapeHtml(office.title)}</h3>
-                <p>地址：${escapeHtml(office.address)}</p>
-                <p>电话：${escapeHtml(office.phone)}</p>
-              </article>
+              <button class="office-card ${index === 0 ? "is-active" : ""}" type="button" data-office-index="${index}" aria-pressed="${index === 0 ? "true" : "false"}">
+                <strong>${escapeHtml(office.title)}</strong>
+                <span>地址：${escapeHtml(office.address)}</span>
+                <span>电话：${escapeHtml(office.phone)}</span>
+              </button>
             `).join("")}
           </div>
-          <div class="office-map" aria-label="公司网点示意图">
-            <span class="map-line map-line-a"></span>
-            <span class="map-line map-line-b"></span>
-            <span class="map-pin map-pin-shanghai">上海总公司</span>
-            <span class="map-pin map-pin-ningbo">宁波</span>
-            <span class="map-pin map-pin-jiangyin">江阴</span>
-            <span class="map-pin map-pin-qingdao">青岛</span>
-            <span class="map-pin map-pin-shenzhen">深圳</span>
+          <div class="office-map" aria-label="公司网点GPS定位图">
+            <span class="gps-water gps-water-main"></span>
+            <span class="gps-water gps-water-harbor"></span>
+            <span class="gps-road gps-road-a"></span>
+            <span class="gps-road gps-road-b"></span>
+            <span class="gps-road gps-road-c"></span>
+            <span class="gps-road gps-road-d"></span>
+            <span class="gps-road gps-road-e"></span>
+            <span class="gps-road gps-road-f"></span>
+            <span class="gps-label gps-label-shanghai">上海市</span>
+            <span class="gps-label gps-label-suzhou">苏州市</span>
+            <span class="gps-label gps-label-ningbo">宁波市</span>
+            <span class="gps-label gps-label-hangzhou">杭州市</span>
+            <span class="gps-pin" data-gps-pin style="left: ${firstPoint.x}%; top: ${firstPoint.y}%;"></span>
+            <div class="gps-tooltip" data-gps-tooltip style="left: ${firstPoint.x}%; top: ${firstPoint.y}%;">
+              <strong data-gps-title>${escapeHtml(firstOffice.title)}</strong>
+              <span data-gps-address>${escapeHtml(firstOffice.address)}</span>
+              <span data-gps-phone>${escapeHtml(firstOffice.phone)}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -978,9 +1001,49 @@ function bindRelatedCompanyTabs(initialRelated = "overview") {
   setActiveRelated(initialRelated, false);
 }
 
+function bindOfficeMap() {
+  const officeCards = Array.from(document.querySelectorAll("[data-office-index]"));
+  const pin = document.querySelector("[data-gps-pin]");
+  const tooltip = document.querySelector("[data-gps-tooltip]");
+  const title = document.querySelector("[data-gps-title]");
+  const address = document.querySelector("[data-gps-address]");
+  const phone = document.querySelector("[data-gps-phone]");
+
+  if (!officeCards.length || !pin || !tooltip || !title || !address || !phone) {
+    return;
+  }
+
+  const setOffice = (targetCard) => {
+    const index = Number(targetCard.dataset.officeIndex || 0);
+    const office = officeLocations[index] || officeLocations[0];
+    const point = officeMapPoints[index] || officeMapPoints[0];
+
+    officeCards.forEach((card) => {
+      const isActive = card === targetCard;
+      card.classList.toggle("is-active", isActive);
+      card.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+
+    pin.style.left = `${point.x}%`;
+    pin.style.top = `${point.y}%`;
+    tooltip.style.left = `${point.x}%`;
+    tooltip.style.top = `${point.y}%`;
+    title.textContent = office.title;
+    address.textContent = office.address;
+    phone.textContent = office.phone;
+  };
+
+  officeCards.forEach((card) => {
+    card.addEventListener("click", () => setOffice(card));
+  });
+
+  setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0]);
+}
+
 function bindAboutPage(initialSection = "about-intro", initialRelated = "overview") {
   const tabs = Array.from(document.querySelectorAll("[data-about-jump]"));
   bindRelatedCompanyTabs(initialRelated);
+  bindOfficeMap();
 
   const scrollToSection = (sectionId) => {
     const section = document.querySelector(`#${sectionId}`);

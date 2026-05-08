@@ -1958,11 +1958,12 @@ img {
 }
 
 .office-layout {
-  width: min(1080px, 100%);
+  width: min(1120px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 330px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
 }
 
 .office-list {
@@ -1970,23 +1971,40 @@ img {
   overflow: auto;
   background: #fff;
   border: 1px solid #f1b4ae;
+  box-shadow: 0 18px 44px rgba(28, 35, 48, 0.08);
 }
 
-.office-list article {
+.office-card {
+  display: block;
+  width: 100%;
   padding: 18px 20px;
+  border: 0;
   border-bottom: 1px solid #eee;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.office-list article.is-active {
+.office-card:hover {
+  background: #fff8f7;
+}
+
+.office-card.is-active {
   border: 1px solid var(--red);
+  background: #fffafa;
+  box-shadow: inset 4px 0 0 var(--red);
 }
 
-.office-list h3 {
+.office-card strong {
+  display: block;
   margin: 0 0 10px;
   font-size: 18px;
 }
 
-.office-list p {
+.office-card span {
+  display: block;
   margin: 0 0 8px;
   color: #737987;
   font-size: 14px;
@@ -1998,74 +2016,185 @@ img {
   min-height: 560px;
   overflow: hidden;
   background:
-    linear-gradient(135deg, rgba(227, 238, 255, 0.88), rgba(255, 255, 255, 0.92)),
-    radial-gradient(circle at 64% 48%, rgba(72, 143, 222, 0.18), transparent 32%),
-    #fff;
+    linear-gradient(90deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.28)),
+    linear-gradient(135deg, #f9f3e5 0%, #fbf8ef 46%, #e7f0fb 100%);
+  border: 1px solid #e6eaf0;
+  box-shadow: 0 18px 44px rgba(28, 35, 48, 0.08);
 }
 
 .office-map::before {
   content: "";
   position: absolute;
-  inset: 46px 56px;
-  border: 1px solid rgba(105, 155, 210, 0.24);
-  transform: skew(-9deg);
+  inset: 0;
+  background:
+    repeating-linear-gradient(18deg, transparent 0 82px, rgba(137, 101, 222, 0.55) 84px, transparent 88px),
+    repeating-linear-gradient(102deg, transparent 0 96px, rgba(255, 191, 73, 0.78) 99px, transparent 103px),
+    repeating-linear-gradient(152deg, transparent 0 116px, rgba(188, 204, 220, 0.62) 118px, transparent 122px);
+  opacity: 0.68;
 }
 
-.map-line {
+.office-map::after {
+  content: "";
   position: absolute;
-  height: 3px;
-  background: rgba(239, 58, 45, 0.28);
+  inset: 0;
+  background:
+    radial-gradient(circle at 53% 52%, rgba(239, 58, 45, 0.12), transparent 15%),
+    radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(255, 255, 255, 0.42) 49%, transparent 51%),
+    radial-gradient(circle at 50% 50%, transparent 0 30%, rgba(255, 255, 255, 0.36) 31%, transparent 33%);
+  pointer-events: none;
+}
+
+.gps-water {
+  position: absolute;
+  z-index: 1;
+  background: #a9cdf1;
+  opacity: 0.92;
+}
+
+.gps-water-main {
+  right: -10%;
+  top: -8%;
+  width: 44%;
+  height: 116%;
+  clip-path: polygon(24% 0, 100% 0, 100% 100%, 6% 100%, 26% 72%, 12% 46%, 30% 24%);
+}
+
+.gps-water-harbor {
+  left: 42%;
+  top: 0;
+  width: 20%;
+  height: 58%;
+  clip-path: polygon(20% 0, 72% 0, 92% 28%, 68% 68%, 84% 100%, 36% 92%, 6% 58%);
+}
+
+.gps-road {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 191, 73, 0.9);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.78);
   transform-origin: left center;
 }
 
-.map-line-a {
-  left: 34%;
-  top: 45%;
-  width: 260px;
-  transform: rotate(-18deg);
+.gps-road-a {
+  left: 9%;
+  top: 30%;
+  width: 70%;
+  transform: rotate(10deg);
 }
 
-.map-line-b {
+.gps-road-b {
+  left: 12%;
+  top: 60%;
+  width: 76%;
+  transform: rotate(-8deg);
+}
+
+.gps-road-c {
+  left: 20%;
+  top: 18%;
+  width: 70%;
+  background: rgba(166, 118, 230, 0.7);
+  transform: rotate(62deg);
+}
+
+.gps-road-d {
+  left: 8%;
+  top: 76%;
+  width: 70%;
+  background: rgba(166, 118, 230, 0.7);
+  transform: rotate(-44deg);
+}
+
+.gps-road-e {
   left: 37%;
-  top: 50%;
-  width: 330px;
-  transform: rotate(28deg);
+  top: 12%;
+  width: 56%;
+  transform: rotate(92deg);
 }
 
-.map-pin {
+.gps-road-f {
+  left: 18%;
+  top: 44%;
+  width: 52%;
+  transform: rotate(0deg);
+}
+
+.gps-label {
   position: absolute;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--red);
-  color: #fff;
+  z-index: 3;
+  color: rgba(36, 48, 64, 0.58);
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 10px 20px rgba(239, 58, 45, 0.2);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
-.map-pin-shanghai {
-  left: 45%;
-  top: 47%;
-}
-
-.map-pin-ningbo {
+.gps-label-shanghai {
   left: 55%;
-  top: 52%;
+  top: 54%;
 }
 
-.map-pin-jiangyin {
-  left: 48%;
-  top: 38%;
+.gps-label-suzhou {
+  left: 33%;
+  top: 42%;
 }
 
-.map-pin-qingdao {
-  left: 38%;
-  top: 30%;
+.gps-label-ningbo {
+  left: 61%;
+  top: 69%;
 }
 
-.map-pin-shenzhen {
-  left: 32%;
-  top: 66%;
+.gps-label-hangzhou {
+  left: 41%;
+  top: 69%;
+}
+
+.gps-pin {
+  position: absolute;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--red);
+  box-shadow: 0 10px 24px rgba(239, 58, 45, 0.35);
+  transform: translate(-50%, -100%) rotate(-45deg);
+  transition: left 0.24s ease, top 0.24s ease;
+}
+
+.gps-pin::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.gps-tooltip {
+  position: absolute;
+  z-index: 6;
+  width: min(270px, 46%);
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(214, 218, 225, 0.9);
+  box-shadow: 0 12px 28px rgba(28, 35, 48, 0.16);
+  transform: translate(-50%, calc(-100% - 48px));
+  transition: left 0.24s ease, top 0.24s ease;
+}
+
+.gps-tooltip strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #202333;
+  font-size: 15px;
+}
+
+.gps-tooltip span {
+  display: block;
+  color: #697080;
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 .placeholder-page {
@@ -2494,6 +2623,15 @@ img {
 
   .office-map {
     min-height: 360px;
+  }
+
+  .gps-tooltip {
+    width: min(260px, 72%);
+    transform: translate(-50%, calc(-100% - 42px));
+  }
+
+  .gps-label {
+    font-size: 11px;
   }
 
   .service-tabs,
