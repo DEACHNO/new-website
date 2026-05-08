@@ -555,12 +555,13 @@ function serviceDetailPage(type = "1") {
     "3": {
       title: "仓库·配送服务详情",
       sectionTitle: "仓库·配送",
-      heroImageUrl: "/media/service-warehouse.jpg",
+      heroImageUrl: "/media/service-customs.jpg",
+      heroPosition: "center bottom",
       primaryImageUrl: "/media/service-customs.jpg",
       secondaryImageUrl: "/media/service-brand-bg.jpg",
       primaryAlt: "仓储配送货物装载",
       secondaryAlt: "配送车辆与现场人员",
-      primaryClass: "service-detail-focus-bottom",
+      primaryClass: "service-detail-focus-warehouse",
       secondaryClass: "service-detail-focus-brand-top",
       intro: [
         "我们将负责把国际货物安全、稳妥地送达您指定的交货地点。您可依据货物尺寸，随心选用从小型货车到大型拖车等各类车辆。"
@@ -573,10 +574,11 @@ function serviceDetailPage(type = "1") {
   const detail = details[type] || details["1"];
   const primaryClass = detail.primaryClass || "service-detail-focus-bottom";
   const secondaryClass = detail.secondaryClass || "service-detail-focus-top";
+  const heroPosition = detail.heroPosition || "center top";
 
   return `
     <div class="page-shell service-detail-page">
-      <section class="service-detail-hero" style="background-image: linear-gradient(90deg, rgba(10, 18, 30, 0.3), rgba(10, 18, 30, 0.04)), url('${escapeHtml(detail.heroImageUrl)}');">
+      <section class="service-detail-hero" style="background-position: ${escapeHtml(heroPosition)}; background-image: linear-gradient(90deg, rgba(10, 18, 30, 0.3), rgba(10, 18, 30, 0.04)), url('${escapeHtml(detail.heroImageUrl)}');">
         <div class="container service-detail-hero-inner">
           <h1>${escapeHtml(detail.title)}</h1>
         </div>
