@@ -573,12 +573,12 @@ const officeLocations = [
 ];
 
 const officeMapPoints = [
-  { x: 52, y: 52 },
-  { x: 58, y: 66 },
-  { x: 49, y: 43 },
-  { x: 42, y: 30 },
-  { x: 34, y: 76 },
-  { x: 78, y: 45 }
+  { lat: 31.2634, lng: 121.4886, zoom: 12 },
+  { lat: 29.8176, lng: 121.5521, zoom: 12 },
+  { lat: 31.9108, lng: 120.2762, zoom: 11 },
+  { lat: 36.0671, lng: 120.3826, zoom: 11 },
+  { lat: 22.5431, lng: 114.0579, zoom: 11 },
+  { lat: 35.6812, lng: 139.7671, zoom: 9 }
 ];
 
 function trackingPage(siteAssets) {
@@ -820,9 +820,6 @@ function relatedCompanyMarkup() {
 }
 
 function officeMapMarkup() {
-  const firstOffice = officeLocations[0];
-  const firstPoint = officeMapPoints[0];
-
   return `
     <section class="about-section about-contact-section" id="about-contact">
       <div class="container">
@@ -837,25 +834,8 @@ function officeMapMarkup() {
               </button>
             `).join("")}
           </div>
-          <div class="office-map" aria-label="公司网点GPS定位图">
-            <span class="gps-water gps-water-main"></span>
-            <span class="gps-water gps-water-harbor"></span>
-            <span class="gps-road gps-road-a"></span>
-            <span class="gps-road gps-road-b"></span>
-            <span class="gps-road gps-road-c"></span>
-            <span class="gps-road gps-road-d"></span>
-            <span class="gps-road gps-road-e"></span>
-            <span class="gps-road gps-road-f"></span>
-            <span class="gps-label gps-label-shanghai">上海市</span>
-            <span class="gps-label gps-label-suzhou">苏州市</span>
-            <span class="gps-label gps-label-ningbo">宁波市</span>
-            <span class="gps-label gps-label-hangzhou">杭州市</span>
-            <span class="gps-pin" data-gps-pin style="left: ${firstPoint.x}%; top: ${firstPoint.y}%;"></span>
-            <div class="gps-tooltip" data-gps-tooltip style="left: ${firstPoint.x}%; top: ${firstPoint.y}%;">
-              <strong data-gps-title>${escapeHtml(firstOffice.title)}</strong>
-              <span data-gps-address>${escapeHtml(firstOffice.address)}</span>
-              <span data-gps-phone>${escapeHtml(firstOffice.phone)}</span>
-            </div>
+          <div class="office-map" data-office-map aria-label="公司网点可缩放地图">
+            <div class="office-map-fallback">地图加载中...</div>
           </div>
         </div>
       </div>
@@ -1003,17 +983,25 @@ function bindRelatedCompanyTabs(initialRelated = "overview") {
 
 function bindOfficeMap() {
   const officeCards = Array.from(document.querySelectorAll("[data-office-index]"));
-  const pin = document.querySelector("[data-gps-pin]");
-  const tooltip = document.querySelector("[data-gps-tooltip]");
-  const title = document.querySelector("[data-gps-title]");
-  const address = document.querySelector("[data-gps-address]");
-  const phone = document.querySelector("[data-gps-phone]");
+  const mapElement = document.querySelector("[data-office-map]");
 
-  if (!officeCards.length || !pin || !tooltip || !title || !address || !phone) {
+  if (!officeCards.length || !mapElement) {
     return;
   }
 
-  const setOffice = (targetCard) => {
+  const canUseMap = typeof window.L !== "undefined";
+  let map;
+  let markers = [];
+
+  const popupMarkup = (office) => `
+    <div class="office-popup">
+      <strong>${escapeHtml(office.title)}</strong>
+      <span>地址：${escapeHtml(office.address)}</span>
+      <span>电话：${escapeHtml(office.phone)}</span>
+    </div>
+  `;
+
+  const setOffice = (targetCard, shouldMoveMap = true) => {
     const index = Number(targetCard.dataset.officeIndex || 0);
     const office = officeLocations[index] || officeLocations[0];
     const point = officeMapPoints[index] || officeMapPoints[0];
@@ -1024,20 +1012,74 @@ function bindOfficeMap() {
       card.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
 
-    pin.style.left = `${point.x}%`;
-    pin.style.top = `${point.y}%`;
-    tooltip.style.left = `${point.x}%`;
-    tooltip.style.top = `${point.y}%`;
-    title.textContent = office.title;
-    address.textContent = office.address;
-    phone.textContent = office.phone;
+    if (!map || !point) {
+      return;
+    }
+
+    if (shouldMoveMap) {
+      map.flyTo([point.lat, point.lng], point.zoom || 11, { duration: 0.55 });
+    }
+
+    markers[index]?.openPopup();
   };
 
   officeCards.forEach((card) => {
     card.addEventListener("click", () => setOffice(card));
   });
 
-  setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0]);
+  if (!canUseMap) {
+    mapElement.classList.add("is-unavailable");
+    return;
+  }
+
+  const markerIcon = window.L.divIcon({
+    className: "office-leaflet-pin",
+    html: "<span></span>",
+    iconSize: [34, 42],
+    iconAnchor: [17, 42],
+    popupAnchor: [0, -38]
+  });
+
+  map = window.L.map(mapElement, {
+    center: [32.2, 126.2],
+    zoom: 5,
+    minZoom: 3,
+    maxZoom: 18,
+    scrollWheelZoom: true,
+    zoomControl: true
+  });
+
+  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  markers = officeLocations.map((office, index) => {
+    const point = officeMapPoints[index];
+
+    return window.L.marker([point.lat, point.lng], {
+      icon: markerIcon,
+      title: office.title
+    })
+      .addTo(map)
+      .bindTooltip(office.title, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -39],
+        className: "office-map-label"
+      })
+      .bindPopup(popupMarkup(office))
+      .on("click", () => setOffice(officeCards[index], false));
+  });
+
+  const bounds = window.L.latLngBounds(officeMapPoints.map((point) => [point.lat, point.lng]));
+  map.fitBounds(bounds, { padding: [42, 42] });
+  mapElement.classList.add("is-loaded");
+
+  window.setTimeout(() => {
+    map.invalidateSize();
+    setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0], false);
+  }, 120);
 }
 
 function bindAboutPage(initialSection = "about-intro", initialRelated = "overview") {
