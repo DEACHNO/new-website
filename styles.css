@@ -1737,23 +1737,34 @@ img {
   border-right: 2px solid var(--line);
 }
 
-.related-menu span {
+.related-menu button {
   display: flex;
   align-items: center;
+  width: 100%;
   min-height: 86px;
   padding: 0 28px;
+  border: 0;
+  background: transparent;
   font-size: 22px;
+  font-weight: 500;
   color: #202333;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
-.related-menu .is-active {
+.related-menu button:hover {
+  color: var(--red);
+}
+
+.related-menu button.is-active {
   position: relative;
   background: var(--red);
   color: #fff;
   font-weight: 700;
 }
 
-.related-menu .is-active::after {
+.related-menu button.is-active::after {
   content: "";
   position: absolute;
   right: -10px;
@@ -1772,6 +1783,14 @@ img {
     linear-gradient(130deg, transparent 0 54%, rgba(240, 241, 244, 0.72) 54% 72%, transparent 72%);
 }
 
+.related-panel-item {
+  display: none;
+}
+
+.related-panel-item.is-active {
+  display: block;
+}
+
 .related-overview dl {
   display: grid;
   grid-template-columns: 130px minmax(0, 1fr);
@@ -1783,7 +1802,8 @@ img {
 }
 
 .related-overview h3,
-.related-columns h3 {
+.related-columns h3,
+.related-text-panel h3 {
   margin: 0 0 14px;
   color: var(--ink);
 }
@@ -1849,6 +1869,77 @@ img {
 
 .related-columns p + p {
   margin-top: 8px;
+}
+
+.related-text-panel {
+  color: #202333;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.85;
+}
+
+.related-text-panel p {
+  margin: 0;
+}
+
+.related-text-panel p + p {
+  margin-top: 12px;
+}
+
+.related-performance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  align-items: center;
+  gap: 34px;
+}
+
+.china-route-map,
+.japan-route-map {
+  position: relative;
+  min-height: 250px;
+  padding: 28px;
+  border: 1px solid rgba(210, 213, 221, 0.72);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(244, 246, 249, 0.86)),
+    #fff;
+  overflow: hidden;
+}
+
+.china-route-map::before,
+.japan-route-map::before {
+  content: "";
+  position: absolute;
+  inset: 42px;
+  border: 2px solid rgba(32, 35, 51, 0.14);
+  border-radius: 48% 42% 46% 54%;
+  transform: rotate(-12deg);
+}
+
+.japan-route-map::before {
+  inset: 34px 88px;
+  border-radius: 58% 34% 60% 30%;
+  transform: rotate(18deg);
+}
+
+.china-route-map span,
+.japan-route-map span {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 12px 8px 0;
+  color: #202333;
+  font-weight: 700;
+}
+
+.china-route-map span::before,
+.japan-route-map span::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red);
 }
 
 .about-contact-section {
@@ -2237,13 +2328,17 @@ img {
     border-bottom: 1px solid var(--line);
   }
 
-  .related-menu span {
+  .related-menu button {
     min-height: 58px;
     font-size: 18px;
   }
 
-  .related-menu .is-active::after {
+  .related-menu button.is-active::after {
     display: none;
+  }
+
+  .related-performance {
+    grid-template-columns: 1fr;
   }
 
   .footer-inner {
@@ -2375,6 +2470,15 @@ img {
 
   .related-menu {
     grid-template-columns: 1fr;
+  }
+
+  .related-text-panel {
+    font-size: 17px;
+  }
+
+  .china-route-map,
+  .japan-route-map {
+    min-height: 220px;
   }
 
   .office-map {

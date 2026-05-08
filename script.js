@@ -680,6 +680,98 @@ function relatedCompanyMarkup() {
   const features = ["自行签发提单", "可直接向船公司订舱，提供更优惠的价格", "快速通关配送"];
   const performance = ["2024年出口货物量达78000标准箱（TEU）以上", "可从中国所有港口出口", "中国国内客户（发货人）约20000家以上"];
   const japan = ["可应对日本国内所有港口", "日本国内的客户超过7000家", "日本国内合作清关行"];
+  const sections = [
+    {
+      id: "overview",
+      label: "公司概要",
+      content: `
+        <div class="related-overview">
+          <h3>公司概要</h3>
+          <dl>
+            <dt>公司名</dt>
+            <dd>株式会社 東洋ファストトランスポート<br>TOYO FAST TRANSPORT CO., LTD.</dd>
+            <dt>成立日</dt>
+            <dd>2010年1月15日</dd>
+            <dt>资本金</dt>
+            <dd>1000万日元</dd>
+            <dt>公司法人</dt>
+            <dd>代表董事兼总经理 盛晓亮</dd>
+            <dt>主要经营内容</dt>
+            <dd>货物运输 / 进出口通关代理业务 / 进出口代理业务</dd>
+          </dl>
+        </div>
+      `
+    },
+    {
+      id: "flow",
+      label: "进出口流程图",
+      content: `
+        <div class="related-flow">
+          <p>例如：中国出口到日本的情况</p>
+          <strong>从中国工厂出货到日本仓库纳品，都请放心交给我们！</strong>
+          <div class="flow-grid">
+            ${flowSteps.map((step) => `
+              <div class="flow-step">
+                <span aria-hidden="true"></span>
+                <p>${escapeHtml(step)}</p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `
+    },
+    {
+      id: "features",
+      label: "公司特色",
+      content: `
+        <div class="related-text-panel">
+          <h3>公司特色</h3>
+          ${features.map((item, index) => `<p>${index + 1}. ${escapeHtml(item)}</p>`).join("")}
+        </div>
+      `
+    },
+    {
+      id: "performance",
+      label: "货物处理量的业绩表现",
+      content: `
+        <div class="related-performance">
+          <div class="related-text-panel">
+            <h3>货物处理量的业绩表现</h3>
+            ${performance.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
+          </div>
+          <div class="china-route-map" aria-label="中国港口覆盖示意图">
+            <span>天津</span>
+            <span>大连</span>
+            <span>青岛</span>
+            <span>上海</span>
+            <span>宁波·舟山</span>
+            <span>厦门</span>
+            <span>广州</span>
+            <span>深圳</span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: "japan",
+      label: "日本侧业绩",
+      content: `
+        <div class="related-performance">
+          <div class="related-text-panel">
+            <h3>日本侧业绩</h3>
+            ${japan.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
+          </div>
+          <div class="japan-route-map" aria-label="日本港口覆盖示意图">
+            <span>北海道</span>
+            <span>东京</span>
+            <span>名古屋</span>
+            <span>大阪</span>
+            <span>福冈</span>
+          </div>
+        </div>
+      `
+    }
+  ];
 
   return `
     <section class="about-section related-company" id="about-related">
@@ -687,54 +779,16 @@ function relatedCompanyMarkup() {
         <h2 class="about-section-title related-title">关联公司 TOYO FAST TRANSPORT CO.,LTD.</h2>
         <div class="related-layout">
           <div class="related-menu" aria-label="关联公司内容">
-            <span class="is-active">公司概要</span>
-            <span>进出口流程图</span>
-            <span>公司特色</span>
-            <span>货物处理量的业绩表现</span>
-            <span>日本侧业绩</span>
+            ${sections.map((section, index) => `
+              <button class="${index === 0 ? "is-active" : ""}" type="button" data-related-tab="${escapeHtml(section.id)}">${escapeHtml(section.label)}</button>
+            `).join("")}
           </div>
           <div class="related-panel">
-            <div class="related-overview">
-              <h3>公司概要</h3>
-              <dl>
-                <dt>公司名</dt>
-                <dd>株式会社 東洋ファストトランスポート<br>TOYO FAST TRANSPORT CO., LTD.</dd>
-                <dt>成立日</dt>
-                <dd>2010年1月15日</dd>
-                <dt>资本金</dt>
-                <dd>1000万日元</dd>
-                <dt>公司法人</dt>
-                <dd>代表董事兼总经理 盛晓亮</dd>
-                <dt>主要经营内容</dt>
-                <dd>货物运输 / 进出口通关代理业务 / 进出口代理业务</dd>
-              </dl>
-            </div>
-            <div class="related-flow">
-              <p>例如：中国出口到日本的情况</p>
-              <strong>从中国工厂出货到日本仓库纳品，都请放心交给我们！</strong>
-              <div class="flow-grid">
-                ${flowSteps.map((step) => `
-                  <div class="flow-step">
-                    <span aria-hidden="true"></span>
-                    <p>${escapeHtml(step)}</p>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-            <div class="related-columns">
-              <div>
-                <h3>公司特色</h3>
-                ${features.map((item, index) => `<p>${index + 1}. ${escapeHtml(item)}</p>`).join("")}
-              </div>
-              <div>
-                <h3>货物处理量的业绩表现</h3>
-                ${performance.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
-              </div>
-              <div>
-                <h3>日本侧业绩</h3>
-                ${japan.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
-              </div>
-            </div>
+            ${sections.map((section, index) => `
+              <article class="related-panel-item ${index === 0 ? "is-active" : ""}" data-related-panel="${escapeHtml(section.id)}">
+                ${section.content}
+              </article>
+            `).join("")}
           </div>
         </div>
       </div>
@@ -875,8 +929,32 @@ function bindTrackingPage() {
   });
 }
 
+function bindRelatedCompanyTabs() {
+  const buttons = Array.from(document.querySelectorAll("[data-related-tab]"));
+  const panels = Array.from(document.querySelectorAll("[data-related-panel]"));
+
+  if (!buttons.length || !panels.length) {
+    return;
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = button.dataset.relatedTab;
+
+      buttons.forEach((item) => {
+        item.classList.toggle("is-active", item === button);
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("is-active", panel.dataset.relatedPanel === target);
+      });
+    });
+  });
+}
+
 function bindAboutPage(initialSection = "about-intro") {
   const tabs = Array.from(document.querySelectorAll("[data-about-jump]"));
+  bindRelatedCompanyTabs();
 
   const scrollToSection = (sectionId) => {
     const section = document.querySelector(`#${sectionId}`);
