@@ -551,6 +551,23 @@ function serviceDetailPage(type = "1") {
       followup: [
         "本公司驻有经验丰富的报关员，他们积极与海关协调，精准完成各类繁琐文件的准备、申报、精确计算并支付税金，仔细确认国际物流相关法令，全方位助力客户，达成其期待的高效畅达的国际物流运作。"
       ]
+    },
+    "3": {
+      title: "仓库·配送服务详情",
+      sectionTitle: "仓库·配送",
+      heroImageUrl: "/media/service-warehouse.jpg",
+      primaryImageUrl: "/media/service-customs.jpg",
+      secondaryImageUrl: "/media/service-brand-bg.jpg",
+      primaryAlt: "仓储配送货物装载",
+      secondaryAlt: "配送车辆与现场人员",
+      primaryClass: "service-detail-focus-bottom",
+      secondaryClass: "service-detail-focus-brand-top",
+      intro: [
+        "我们将负责把国际货物安全、稳妥地送达您指定的交货地点。您可依据货物尺寸，随心选用从小型货车到大型拖车等各类车辆。"
+      ],
+      followup: [
+        "除常规的包装货物运输服务外，不管是散装货物（散装）、冷冻货物、危险货物，还是运输难度极大的特殊货物运输需求，都请放心交给本公司。"
+      ]
     }
   };
   const detail = details[type] || details["1"];
