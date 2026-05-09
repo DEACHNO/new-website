@@ -1306,14 +1306,15 @@ function serviceDetailPage(type = "1") {
     "3": {
       title: "仓库·配送服务详情",
       sectionTitle: "仓库·配送",
-      heroImageUrl: "/media/service-customs.jpg",
-      heroPosition: "center bottom",
-      primaryImageUrl: "/media/service-customs.jpg",
-      secondaryImageUrl: "/media/service-brand-bg.jpg",
+      heroImageUrl: "/media/cangku-1-hd.png",
+      heroFullBanner: true,
+      heroAspectRatio: "2100 / 749",
+      primaryImageUrl: "/media/cangku-2.jpeg",
+      secondaryImageUrl: "/media/cangku-3.jpg",
       primaryAlt: "仓储配送货物装载",
       secondaryAlt: "配送车辆与现场人员",
-      primaryClass: "service-detail-focus-warehouse",
-      secondaryClass: "service-detail-focus-brand-top",
+      primaryClass: "service-detail-fit",
+      secondaryClass: "service-detail-fit",
       intro: [
         "我们将负责把国际货物安全、稳妥地送达您指定的交货地点。您可依据货物尺寸，随心选用从小型货车到大型拖车等各类车辆。"
       ],
