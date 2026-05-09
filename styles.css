@@ -10,6 +10,7 @@
   --surface: rgba(255, 255, 255, 0.88);
   --shadow-soft: 0 20px 60px rgba(18, 18, 32, 0.08);
   --shadow-line: 0 1px 0 rgba(18, 18, 32, 0.06);
+  --full-banner-max-height: max(280px, calc(100svh - clamp(150px, 13rem, 240px)));
 }
 
 * {
@@ -414,6 +415,7 @@ img {
   min-height: 0;
   width: 100%;
   aspect-ratio: var(--hero-aspect-ratio, 1940 / 810);
+  max-height: var(--full-banner-max-height);
   background: #0f1720;
 }
 
@@ -810,6 +812,7 @@ img {
   position: relative;
   min-height: 0;
   aspect-ratio: 1983 / 793;
+  max-height: var(--full-banner-max-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -817,7 +820,7 @@ img {
   color: #fff;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: contain;
 }
 
 .service-center-hero::after {
@@ -1007,7 +1010,8 @@ img {
 .service-detail-hero-full-banner {
   min-height: 0;
   aspect-ratio: var(--service-detail-hero-ratio, 1925 / 817);
-  background-size: 100% 100%;
+  max-height: var(--full-banner-max-height);
+  background-size: contain;
 }
 
 .service-detail-hero-full-banner::after {
@@ -2586,6 +2590,10 @@ img {
 }
 
 @media (max-width: 768px) {
+  :root {
+    --full-banner-max-height: max(220px, calc(100svh - 10rem));
+  }
+
   .container {
     width: min(100% - 28px, 1320px);
   }
@@ -2602,6 +2610,11 @@ img {
   .hero,
   .hero-inner {
     min-height: 460px;
+  }
+
+  .hero-media,
+  .hero-media .hero-inner {
+    min-height: 0;
   }
 
   .hero-indicators {
