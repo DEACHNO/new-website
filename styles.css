@@ -2342,6 +2342,86 @@ img {
   transform: rotate(-45deg) scale(1.12);
 }
 
+.privacy-page {
+  background: #f7f8fa;
+  padding: 78px 0 96px;
+}
+
+.privacy-container {
+  width: min(100% - 48px, 1040px);
+}
+
+.privacy-header {
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+.privacy-header p {
+  margin: 0 0 10px;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.privacy-header h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.14;
+}
+
+.privacy-header span {
+  display: block;
+  margin-top: 14px;
+  color: #737987;
+  font-size: 14px;
+}
+
+.privacy-content {
+  padding: 48px 56px;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 44px rgba(28, 35, 48, 0.08);
+  color: #202333;
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+.privacy-content > p {
+  margin: 0 0 34px;
+}
+
+.privacy-section + .privacy-section {
+  margin-top: 34px;
+  padding-top: 30px;
+  border-top: 1px solid #edf0f4;
+}
+
+.privacy-section h2 {
+  margin: 0 0 14px;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.45;
+}
+
+.privacy-section p {
+  margin: 0;
+}
+
+.privacy-section p + p {
+  margin-top: 12px;
+}
+
+.privacy-section ol {
+  margin: 12px 0 0;
+  padding-left: 1.45em;
+}
+
+.privacy-section li + li {
+  margin-top: 8px;
+}
+
 .placeholder-page {
   padding: 120px 0;
 }
@@ -2731,6 +2811,19 @@ img {
 
   .about-section-title {
     margin-bottom: 32px;
+  }
+
+  .privacy-page {
+    padding: 52px 0 68px;
+  }
+
+  .privacy-container {
+    width: min(100% - 28px, 1040px);
+  }
+
+  .privacy-content {
+    padding: 28px 22px;
+    font-size: 16px;
   }
 
   .about-intro-copy,

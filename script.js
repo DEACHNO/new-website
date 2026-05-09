@@ -1085,6 +1085,120 @@ function placeholderPage(title, text) {
   `;
 }
 
+function privacyPolicyPage() {
+  const sections = [
+    {
+      title: "1. 個人情報の取得",
+      paragraphs: [
+        "当社は、お問い合わせ、見積依頼、貨物輸送・通関・倉庫配送等のサービス提供、会員登録、貨物追跡その他本ウェブサイト上の各種手続に際し、氏名、会社名、部署名、住所、電話番号、メールアドレス、貨物情報、取引に関する情報その他必要な範囲の個人情報を取得することがあります。",
+        "当社は、適法かつ公正な手段により個人情報を取得し、利用目的をできる限り明確にしたうえで取り扱います。"
+      ]
+    },
+    {
+      title: "2. 個人情報の利用目的",
+      paragraphs: [
+        "当社は、取得した個人情報を以下の目的の範囲内で利用します。"
+      ],
+      items: [
+        "国際貨物輸送、海上輸送、航空輸送、通関、倉庫配送、貨物追跡その他当社サービスの提供および運営のため",
+        "お問い合わせ、見積依頼、資料請求、各種ご相談への回答および本人確認のため",
+        "契約の締結、履行、請求、決済、取引管理、アフターサービスのため",
+        "サービス改善、新機能、重要なお知らせ、メンテナンス、キャンペーン等の案内のため",
+        "不正利用、利用規約違反、事故、紛争等の防止および対応のため",
+        "法令、行政機関、裁判所その他公的機関からの要請に対応するため",
+        "上記の利用目的に付随する目的のため"
+      ]
+    },
+    {
+      title: "3. 第三者提供",
+      paragraphs: [
+        "当社は、法令に基づく場合を除き、あらかじめ本人の同意を得ることなく個人情報を第三者に提供しません。ただし、貨物輸送、通関、配送、保険、決済、システム保守等の業務遂行に必要な範囲で、船会社、航空会社、通関業者、倉庫業者、配送会社、海外代理店、ITサービス提供会社等に個人情報を提供または委託することがあります。",
+        "当社は、委託先に対して必要かつ適切な監督を行い、個人情報が安全に管理されるよう努めます。"
+      ]
+    },
+    {
+      title: "4. 国外への移転",
+      paragraphs: [
+        "当社のサービスは国際物流に関するものであり、貨物の輸送、通関、配送、現地代理店との連絡等のため、必要な範囲で中国、日本その他の国または地域に所在する関係事業者へ個人情報を移転することがあります。",
+        "国外移転を行う場合、当社は適用される法令に従い、合理的な安全管理措置を講じます。"
+      ]
+    },
+    {
+      title: "5. 安全管理措置",
+      paragraphs: [
+        "当社は、個人情報の漏えい、滅失、毀損、改ざん、不正アクセス等を防止するため、アクセス権限の管理、データの適切な保管、従業員教育、委託先管理その他必要かつ合理的な安全管理措置を講じます。"
+      ]
+    },
+    {
+      title: "6. Cookie等の利用",
+      paragraphs: [
+        "本ウェブサイトでは、利便性の向上、利用状況の把握、表示内容の最適化、セキュリティ確保のため、Cookieその他類似技術を利用することがあります。ユーザーはブラウザの設定によりCookieを無効にできますが、その場合、本ウェブサイトの一部機能を利用できないことがあります。"
+      ]
+    },
+    {
+      title: "7. 個人情報の開示、訂正、削除等",
+      paragraphs: [
+        "ユーザーが自己の個人情報について、開示、訂正、追加、削除、利用停止、第三者提供の停止等を希望する場合、当社所定の方法によりお問い合わせください。当社は、本人確認を行ったうえで、法令に従い合理的な期間内に対応します。"
+      ]
+    },
+    {
+      title: "8. 保存期間",
+      paragraphs: [
+        "当社は、利用目的の達成に必要な期間、契約・取引の履行に必要な期間、または法令上保存が求められる期間、個人情報を保存します。保存の必要がなくなった個人情報は、適切な方法により削除または匿名化します。"
+      ]
+    },
+    {
+      title: "9. 未成年者の個人情報",
+      paragraphs: [
+        "未成年者が本ウェブサイトを利用し個人情報を提供する場合は、親権者その他法定代理人の同意を得たうえで行うものとします。"
+      ]
+    },
+    {
+      title: "10. 本ポリシーの変更",
+      paragraphs: [
+        "当社は、法令の変更、サービス内容の変更、管理体制の改善等に応じて、本ポリシーを変更することがあります。変更後のポリシーは、本ウェブサイトに掲載した時点から効力を生じます。"
+      ]
+    },
+    {
+      title: "11. お問い合わせ窓口",
+      paragraphs: [
+        "本ポリシーおよび個人情報の取扱いに関するお問い合わせは、以下の窓口までご連絡ください。",
+        "上海新悦航运有限公司",
+        "住所：上海市虹口区四川北路525号宇宏大厦9F 901室",
+        "メールアドレス：qiu.q@newhappy2002.com"
+      ]
+    }
+  ];
+
+  return `
+    <section class="privacy-page">
+      <div class="container privacy-container">
+        <header class="privacy-header">
+          <p>NEWHAPPY FREIGHT</p>
+          <h1>プライバシーポリシー</h1>
+          <span>最終更新日：2026年5月10日</span>
+        </header>
+
+        <article class="privacy-content">
+          <p>上海新悦航运有限公司（以下「当社」といいます。）は、当社が運営するウェブサイトおよび当社が提供する物流関連サービス（以下「本サービス」といいます。）における個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。</p>
+
+          ${sections.map((section) => `
+            <section class="privacy-section">
+              <h2>${escapeHtml(section.title)}</h2>
+              ${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+              ${section.items ? `
+                <ol>
+                  ${section.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+                </ol>
+              ` : ""}
+            </section>
+          `).join("")}
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function loadingPage() {
   return `
     <section class="placeholder-page">
@@ -1613,6 +1727,22 @@ async function render() {
       if (initialSection === "about-intro") {
         window.scrollTo({ top: 0, behavior: "auto" });
       }
+    } catch (error) {
+      console.error(error);
+      app.innerHTML = errorPage();
+    }
+
+    return;
+  }
+
+  if (path === "/privacy" || path === "/PrivacyAgreement") {
+    app.innerHTML = loadingPage();
+
+    try {
+      const siteAssets = await loadSiteAssets();
+      applyBrandAssets(siteAssets);
+      app.innerHTML = privacyPolicyPage();
+      window.scrollTo({ top: 0, behavior: "auto" });
     } catch (error) {
       console.error(error);
       app.innerHTML = errorPage();
