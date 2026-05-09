@@ -413,7 +413,9 @@ img {
 
 .hero-media {
   min-height: 0;
-  width: 100%;
+  width: min(100%, 1320px);
+  margin-right: auto;
+  margin-left: auto;
   aspect-ratio: var(--hero-aspect-ratio, 1940 / 810);
   max-height: var(--full-banner-max-height);
   background: #0f1720;
@@ -811,6 +813,9 @@ img {
 .service-center-hero {
   position: relative;
   min-height: 0;
+  width: min(100%, 1320px);
+  margin-right: auto;
+  margin-left: auto;
   aspect-ratio: 1983 / 793;
   max-height: var(--full-banner-max-height);
   display: flex;
@@ -1009,6 +1014,9 @@ img {
 
 .service-detail-hero-full-banner {
   min-height: 0;
+  width: min(100%, 1320px);
+  margin-right: auto;
+  margin-left: auto;
   aspect-ratio: var(--service-detail-hero-ratio, 1925 / 817);
   max-height: var(--full-banner-max-height);
   background-size: contain;
