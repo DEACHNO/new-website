@@ -1966,7 +1966,27 @@ img {
 }
 
 .related-flow {
-  margin: 26px 0 32px;
+  position: relative;
+  margin: 0;
+  padding: 4px 0 6px;
+  overflow: hidden;
+}
+
+.related-flow::before {
+  content: "";
+  position: absolute;
+  top: -72px;
+  right: -110px;
+  width: 420px;
+  height: 240px;
+  background: url("./media/guanyu-9.png?v=hd-20260510") center/cover no-repeat;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.related-flow > * {
+  position: relative;
+  z-index: 1;
 }
 
 .related-flow p,
@@ -1983,31 +2003,29 @@ img {
 .flow-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
-  margin-top: 28px;
+  gap: 60px 70px;
+  margin-top: 48px;
 }
 
 .flow-step {
+  min-height: 188px;
   text-align: center;
 }
 
-.flow-step span {
-  width: 82px;
-  height: 82px;
-  margin: 0 auto 14px;
+.flow-step img {
+  width: 122px;
+  height: 122px;
+  margin: 0 auto 22px;
   display: block;
-  border-radius: 50%;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)),
-    var(--red);
+  object-fit: contain;
 }
 
 .flow-step p,
 .related-columns p {
   margin: 0;
   color: #202333;
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 20px;
+  line-height: 1.42;
 }
 
 .related-columns {

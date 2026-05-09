@@ -696,7 +696,14 @@ function qualificationMarkup() {
 }
 
 function relatedCompanyMarkup() {
-  const flowSteps = ["工厂出货", "办理出口通关手续", "海运、空运运输", "指定仓库交货", "集装箱配送", "日本侧清关与卸载"];
+  const flowSteps = [
+    { label: "工厂出货", icon: "/media/chukou-1.png" },
+    { label: "办理出口通关手续\n负责货物装载", icon: "/media/chukou-2.png" },
+    { label: "海运，空运运输", icon: "/media/chukou-3.png" },
+    { label: "指定仓库交货", icon: "/media/chukou-4.png" },
+    { label: "集装箱配送", icon: "/media/chukou-5.png" },
+    { label: "日本侧货物运输：\n进口清关手续，货物卸载", icon: "/media/chukou-6.png" }
+  ];
   const features = ["自行签发提单", "可直接向船公司订舱，提供更优惠的价格", "快速通关配送"];
   const performance = ["2024年出口货物量达78000标准箱（TEU）以上", "可从中国所有港口出口", "中国国内客户（发货人）约20000家以上"];
   const japan = ["可应对日本国内所有港口", "日本国内的客户超过7000家", "日本国内合作清关行"];
@@ -732,8 +739,8 @@ function relatedCompanyMarkup() {
           <div class="flow-grid">
             ${flowSteps.map((step) => `
               <div class="flow-step">
-                <span aria-hidden="true"></span>
-                <p>${escapeHtml(step)}</p>
+                <img src="${escapeHtml(step.icon)}" alt="" aria-hidden="true">
+                <p>${escapeHtml(step.label).replace(/\n/g, "<br>")}</p>
               </div>
             `).join("")}
           </div>
