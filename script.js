@@ -761,21 +761,12 @@ function relatedCompanyMarkup() {
       id: "performance",
       label: "货物处理量的业绩表现",
       content: `
-        <div class="related-performance">
+        <div class="related-performance related-performance-china">
           <div class="related-text-panel">
             <h3>货物处理量的业绩表现</h3>
             ${performance.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
           </div>
-          <div class="china-route-map" aria-label="中国港口覆盖示意图">
-            <span>天津</span>
-            <span>大连</span>
-            <span>青岛</span>
-            <span>上海</span>
-            <span>宁波·舟山</span>
-            <span>厦门</span>
-            <span>广州</span>
-            <span>深圳</span>
-          </div>
+          <img class="related-performance-image" src="/media/huowuchuli.png" alt="中国港口覆盖示意图">
         </div>
       `
     },

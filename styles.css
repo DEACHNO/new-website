@@ -2060,6 +2060,20 @@ img {
   gap: 34px;
 }
 
+.related-performance-china {
+  grid-template-columns: minmax(0, 520px);
+  align-items: start;
+  gap: 24px;
+  padding-left: 18px;
+}
+
+.related-performance-image {
+  display: block;
+  width: min(460px, 100%);
+  height: auto;
+  object-fit: contain;
+}
+
 .china-route-map,
 .japan-route-map {
   position: relative;
