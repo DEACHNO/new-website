@@ -361,6 +361,29 @@ img {
   transform: scale(1.15);
 }
 
+.hero-media {
+  min-height: 0;
+  aspect-ratio: 2513 / 1049;
+  background: #0f1720;
+}
+
+.hero-media::before,
+.hero-media::after,
+.hero-media .hero-overlay,
+.hero-media .hero-copy,
+.hero-media .hero-indicators {
+  display: none;
+}
+
+.hero-media .hero-slide {
+  visibility: hidden;
+  transition: none;
+}
+
+.hero-media .hero-slide.is-active {
+  visibility: visible;
+}
+
 .section {
   padding: 84px 0;
 }

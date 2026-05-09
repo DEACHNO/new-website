@@ -49,7 +49,7 @@ const serviceItems = {
 const noticesApiUrl = "/api/notices";
 const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
-const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260506-split-logo2";
+const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260509-shouye-media2";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
@@ -323,7 +323,7 @@ function homePage(items, siteAssets) {
 
   return `
     <div class="page-shell">
-      <section class="hero">
+      <section class="hero hero-media">
         <div class="hero-carousel" aria-hidden="true">
           ${heroSlides
             .map(
