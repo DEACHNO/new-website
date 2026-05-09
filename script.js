@@ -168,7 +168,7 @@ const defaultSiteAssets = {
     backgroundImageUrl: "/media/news-hero.jpg"
   },
   aboutHero: {
-    backgroundImageUrl: "/media/guanyu-1.png"
+    backgroundImageUrl: "/media/guanyu-1.png?v=hd-20260510"
   },
   services: {
     booking: {
@@ -526,23 +526,23 @@ const aboutTimelineItems = [
 const aboutBranches = [
   {
     title: "2002年上海总公司",
-    imageUrl: "/media/guanyu-3.png"
+    imageUrl: "/media/guanyu-3.png?v=hd-20260510"
   },
   {
     title: "2003年宁波分公司",
-    imageUrl: "/media/guanyu-4.png"
+    imageUrl: "/media/guanyu-4.png?v=hd-20260510"
   },
   {
     title: "2004年江阴分公司",
-    imageUrl: "/media/guanyu-5.png"
+    imageUrl: "/media/guanyu-5.png?v=hd-20260510"
   },
   {
     title: "2024年青岛分公司",
-    imageUrl: "/media/guanyu-6.png"
+    imageUrl: "/media/guanyu-6.png?v=hd-20260510"
   },
   {
     title: "2025年深圳分公司",
-    imageUrl: "/media/guanyu-7.png"
+    imageUrl: "/media/guanyu-7.png?v=hd-20260510"
   }
 ];
 
@@ -939,7 +939,7 @@ function aboutPage(siteAssets) {
         <div class="container">
           <h2 class="about-section-title">海运方面的实力</h2>
           <div class="strength-row">
-            <img src="/media/guanyu-8.png" alt="海运代理服务">
+            <img src="/media/guanyu-8.png?v=hd-20260510" alt="海运代理服务">
             <div>
               <p>我司除了提供整箱和拼箱的海运进出口货物的国际运输代理业务的一条龙服务以外，还可安排上门提货和将货物按时送达客户所指定地点等服务。</p>
               <p>我司拥有日本、美洲、欧洲、澳洲等多条优势航线，并与多家船公司保持良好的合作关系。</p>
@@ -955,7 +955,7 @@ function aboutPage(siteAssets) {
             <div>
               <p>公司与多家航空公司签订长期协议，在舱位和运费上拥有优势，早上9点前交货可安排当天班机，解决客户的紧急需求。</p>
             </div>
-            <img src="/media/guanyu-9.png" alt="空运服务">
+            <img src="/media/guanyu-9.png?v=hd-20260510" alt="空运服务">
           </div>
         </div>
       </section>
