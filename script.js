@@ -550,32 +550,45 @@ const officeLocations = [
   {
     title: "上海总公司",
     address: "上海市四川北路525号宇宏大厦9F 901室",
-    phone: "86-21-6309-3880"
+    phone: "86-21-6309-3880",
+    mapImageUrl: "/media/上海总公司.png"
   },
   {
     title: "宁波分公司",
     address: "宁波市鄞州区泰康中路468号奥丽赛豪如大厦2004室",
-    phone: "86-574-8386-6991"
+    phone: "86-574-8386-6991",
+    mapImageUrl: "/media/宁波分公司.png"
   },
   {
     title: "江阴分公司",
     address: "江阴澄中路118号湾湖国际16楼E座",
-    phone: "86-510-8640-9795"
+    phone: "86-510-8640-9795",
+    mapImageUrl: "/media/江阴分公司.png"
   },
   {
     title: "青岛分公司",
     address: "和达新都汇大厦324室",
-    phone: "86-532-5823-6699"
+    phone: "86-532-5823-6699",
+    mapImageUrl: "/media/青岛分公司.png"
   },
   {
     title: "深圳分公司",
     address: "深圳市福田区新华保险大厦2303M房",
-    phone: "0755-23601514"
+    phone: "0755-23601514",
+    mapImageUrl: "/media/深圳分公司.png"
   },
   {
     title: "日本关联公司",
     address: "東洋ファストトランスポート TOYO FAST TRANSPORT CO., LTD.",
-    phone: "TOYO FAST TRANSPORT CO., LTD."
+    phone: "TOYO FAST TRANSPORT CO., LTD.",
+    mapImageUrl: "/media/日本关联公司.png"
+  },
+  {
+    title: "东京分公司",
+    address: "東京都中央区八丁堀2-1-9 川名第一ビル 302号室",
+    phone: "03-6280-3668",
+    fax: "03-6280-3669",
+    mapImageUrl: "/media/东京分公司.png"
   }
 ];
 
@@ -834,58 +847,17 @@ function officeMapMarkup() {
                 <strong>${escapeHtml(office.title)}</strong>
                 <span>地址：${escapeHtml(office.address)}</span>
                 <span>电话：${escapeHtml(office.phone)}</span>
+                ${office.fax ? `<span>FAX：${escapeHtml(office.fax)}</span>` : ""}
               </button>
             `).join("")}
           </div>
-          <div class="office-map" data-office-map aria-label="公司网点世界地图">
-            <div class="world-map-toolbar" aria-label="地图缩放控制">
-              <button type="button" data-map-zoom-in aria-label="放大地图">+</button>
-              <button type="button" data-map-zoom-out aria-label="缩小地图">-</button>
-              <button type="button" data-map-reset>全图</button>
-            </div>
-            <div class="world-map-viewport" data-map-viewport>
-              <div class="world-map-canvas" data-map-canvas>
-                <svg class="world-map-svg" viewBox="0 0 1000 500" role="img" aria-label="世界地图示意">
-                  <defs>
-                    <pattern id="world-grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="1"/>
-                    </pattern>
-                  </defs>
-                  <rect class="map-ocean" width="1000" height="500"/>
-                  <rect width="1000" height="500" fill="url(#world-grid)"/>
-                  <path class="map-land" d="M85 145 130 102 190 86 250 112 300 154 286 196 322 238 275 278 216 266 170 312 116 286 92 230 54 196Z"/>
-                  <path class="map-land" d="M260 286 304 326 323 386 294 463 247 450 222 386 235 327Z"/>
-                  <path class="map-land" d="M474 120 560 88 671 104 760 132 826 178 814 236 746 250 704 294 620 278 584 228 524 238 454 210 418 164Z"/>
-                  <path class="map-land" d="M516 238 574 266 610 338 582 420 526 392 498 318Z"/>
-                  <path class="map-land" d="M825 332 886 350 918 402 874 432 812 408 794 362Z"/>
-                  <path class="map-land map-land-light" d="M820 196 846 186 865 206 858 234 828 232Z"/>
-                  <path class="map-land map-land-light" d="M368 92 402 80 436 98 426 126 386 124Z"/>
-                  <text class="world-map-label" x="145" y="128">NORTH AMERICA</text>
-                  <text class="world-map-label" x="260" y="362">SOUTH AMERICA</text>
-                  <text class="world-map-label" x="548" y="145">EUROPE / ASIA</text>
-                  <text class="world-map-label" x="535" y="320">AFRICA</text>
-                  <text class="world-map-label" x="822" y="386">AUSTRALIA</text>
-                  <text class="world-map-city" x="832" y="204">日本</text>
-                  <text class="world-map-city" x="832" y="224">Japan</text>
-                  <text class="world-map-city" x="825" y="238">中国</text>
-                </svg>
-                ${officeLocations.map((office, index) => {
-                  const point = projectWorldPoint(officeMapPoints[index]);
-
-                  return `
-                    <button
-                      class="world-map-marker ${index === 0 ? "is-active" : ""}"
-                      type="button"
-                      data-map-marker-index="${index}"
-                      style="left: ${point.x}%; top: ${point.y}%;"
-                    >
-                      <span class="world-map-pin"></span>
-                      <span class="world-map-marker-label">${escapeHtml(office.title)}</span>
-                    </button>
-                  `;
-                }).join("")}
-              </div>
-            </div>
+          <div class="office-map" data-office-map aria-label="公司网点地图">
+            <img
+              class="office-map-image"
+              data-office-map-image
+              src="${escapeHtml(officeLocations[0].mapImageUrl)}"
+              alt="${escapeHtml(officeLocations[0].title)}地图"
+            >
           </div>
         </div>
       </div>
@@ -1033,67 +1005,15 @@ function bindRelatedCompanyTabs(initialRelated = "overview") {
 
 function bindOfficeMap() {
   const officeCards = Array.from(document.querySelectorAll("[data-office-index]"));
-  const mapElement = document.querySelector("[data-office-map]");
-  const viewport = document.querySelector("[data-map-viewport]");
-  const canvas = document.querySelector("[data-map-canvas]");
-  const markers = Array.from(document.querySelectorAll("[data-map-marker-index]"));
-  const zoomInButton = document.querySelector("[data-map-zoom-in]");
-  const zoomOutButton = document.querySelector("[data-map-zoom-out]");
-  const resetButton = document.querySelector("[data-map-reset]");
+  const mapImage = document.querySelector("[data-office-map-image]");
 
-  if (!officeCards.length || !mapElement || !viewport || !canvas) {
+  if (!officeCards.length || !mapImage) {
     return;
   }
 
-  const state = {
-    scale: 1,
-    x: 0,
-    y: 0
-  };
-  const minScale = 1;
-  const maxScale = 6;
-  let isDragging = false;
-  let dragStart = { x: 0, y: 0 };
-
-  const applyTransform = () => {
-    canvas.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
-  };
-
-  const clampScale = (value) => Math.min(maxScale, Math.max(minScale, value));
-
-  const zoomAt = (nextScale, originX, originY) => {
-    const scale = clampScale(nextScale);
-    const ratio = scale / state.scale;
-
-    state.x = originX - (originX - state.x) * ratio;
-    state.y = originY - (originY - state.y) * ratio;
-    state.scale = scale;
-    applyTransform();
-  };
-
-  const showWorld = () => {
-    state.scale = 1;
-    state.x = 0;
-    state.y = 0;
-    applyTransform();
-  };
-
-  const centerOnPoint = (index) => {
-    const point = officeMapPoints[index] || officeMapPoints[0];
-    const projected = projectWorldPoint(point);
-    const viewportRect = viewport.getBoundingClientRect();
-    const targetScale = clampScale(point.zoom >= 12 ? 4.2 : 3.3);
-    const targetX = (projected.x / 100) * viewportRect.width;
-    const targetY = (projected.y / 100) * viewportRect.height;
-
-    state.scale = targetScale;
-    state.x = viewportRect.width / 2 - targetX * targetScale;
-    state.y = viewportRect.height / 2 - targetY * targetScale;
-    applyTransform();
-  };
-
-  const setOffice = (targetCard, shouldMoveMap = true) => {
+  const setOffice = (targetCard) => {
     const index = Number(targetCard.dataset.officeIndex || 0);
+    const office = officeLocations[index] || officeLocations[0];
 
     officeCards.forEach((card) => {
       const isActive = card === targetCard;
@@ -1101,76 +1021,15 @@ function bindOfficeMap() {
       card.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
 
-    markers.forEach((marker) => {
-      marker.classList.toggle("is-active", Number(marker.dataset.mapMarkerIndex || 0) === index);
-    });
-
-    if (shouldMoveMap) centerOnPoint(index);
+    mapImage.src = office.mapImageUrl;
+    mapImage.alt = `${office.title}地图`;
   };
 
   officeCards.forEach((card) => {
     card.addEventListener("click", () => setOffice(card));
   });
 
-  markers.forEach((marker) => {
-    marker.addEventListener("click", () => {
-      const index = Number(marker.dataset.mapMarkerIndex || 0);
-      const card = officeCards[index];
-      if (card) setOffice(card, true);
-    });
-  });
-
-  viewport.addEventListener("wheel", (event) => {
-    event.preventDefault();
-    const viewportRect = viewport.getBoundingClientRect();
-    const originX = event.clientX - viewportRect.left;
-    const originY = event.clientY - viewportRect.top;
-    const nextScale = state.scale * (event.deltaY < 0 ? 1.18 : 0.84);
-    zoomAt(nextScale, originX, originY);
-  }, { passive: false });
-
-  viewport.addEventListener("pointerdown", (event) => {
-    isDragging = true;
-    dragStart = {
-      x: event.clientX - state.x,
-      y: event.clientY - state.y
-    };
-    viewport.classList.add("is-dragging");
-    viewport.setPointerCapture(event.pointerId);
-  });
-
-  viewport.addEventListener("pointermove", (event) => {
-    if (!isDragging) return;
-    state.x = event.clientX - dragStart.x;
-    state.y = event.clientY - dragStart.y;
-    applyTransform();
-  });
-
-  const stopDragging = (event) => {
-    if (!isDragging) return;
-    isDragging = false;
-    viewport.classList.remove("is-dragging");
-    if (event.pointerId !== undefined) {
-      viewport.releasePointerCapture(event.pointerId);
-    }
-  };
-
-  viewport.addEventListener("pointerup", stopDragging);
-  viewport.addEventListener("pointercancel", stopDragging);
-  zoomInButton?.addEventListener("click", () => {
-    const viewportRect = viewport.getBoundingClientRect();
-    zoomAt(state.scale * 1.25, viewportRect.width / 2, viewportRect.height / 2);
-  });
-  zoomOutButton?.addEventListener("click", () => {
-    const viewportRect = viewport.getBoundingClientRect();
-    zoomAt(state.scale / 1.25, viewportRect.width / 2, viewportRect.height / 2);
-  });
-  resetButton?.addEventListener("click", showWorld);
-
-  window.setTimeout(() => {
-    setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0], false);
-    showWorld();
-  }, 60);
+  setOffice(officeCards.find((card) => card.classList.contains("is-active")) || officeCards[0]);
 }
 
 function bindAboutPage(initialSection = "about-intro", initialRelated = "overview") {
