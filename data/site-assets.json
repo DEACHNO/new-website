@@ -8,22 +8,22 @@
       {
         "title": "专业成就可能",
         "subtitle": "精准安排每一段航程，连接你的全球交付计划。",
-        "backgroundImageUrl": "/media/home-hero.jpg"
+        "backgroundImageUrl": "/media/shouye-1.png"
       },
       {
         "title": "专业成就可能",
         "subtitle": "海运、空运与仓配协同，提升每一次履约效率。",
-        "backgroundImageUrl": "/media/service-booking.jpg"
+        "backgroundImageUrl": "/media/shouye-2.png"
       },
       {
         "title": "专业成就可能",
         "subtitle": "合规清关与现场查验支持，让货物流转更顺畅。",
-        "backgroundImageUrl": "/media/service-customs.jpg"
+        "backgroundImageUrl": "/media/shouye-3.png"
       },
       {
         "title": "专业成就可能",
         "subtitle": "稳定仓储与配送执行，保障重要货物按期送达。",
-        "backgroundImageUrl": "/media/service-warehouse.jpg"
+        "backgroundImageUrl": "/media/shouye-4.png"
       }
     ]
   },
@@ -34,15 +34,15 @@
   },
   "services": {
     "booking": {
-      "imageUrl": "/media/service-booking.jpg",
+      "imageUrl": "/media/shouye-5.png",
       "imageAlt": "订舱服务"
     },
     "customs": {
-      "imageUrl": "/media/service-customs.jpg",
+      "imageUrl": "/media/shouye-6.png",
       "imageAlt": "清关查验"
     },
     "warehouse": {
-      "imageUrl": "/media/service-warehouse.jpg",
+      "imageUrl": "/media/shouye-7.png",
       "imageAlt": "仓储配送服务"
     }
   }
