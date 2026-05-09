@@ -167,6 +167,9 @@ const defaultSiteAssets = {
     subtitle: "我们将提供最新资讯和船期表等相关通知",
     backgroundImageUrl: "/media/news-hero.jpg"
   },
+  aboutHero: {
+    backgroundImageUrl: "/media/guanyu-1.png"
+  },
   services: {
     booking: {
       imageUrl: "/media/shouye-5.png",
@@ -523,23 +526,23 @@ const aboutTimelineItems = [
 const aboutBranches = [
   {
     title: "2002年上海总公司",
-    imageUrl: "/media/service-booking.jpg"
+    imageUrl: "/media/guanyu-3.png"
   },
   {
     title: "2003年宁波分公司",
-    imageUrl: "/media/news-hero.jpg"
+    imageUrl: "/media/guanyu-4.png"
   },
   {
     title: "2004年江阴分公司",
-    imageUrl: "/media/service-customs.jpg"
+    imageUrl: "/media/guanyu-5.png"
   },
   {
     title: "2024年青岛分公司",
-    imageUrl: "/media/home-hero.jpg"
+    imageUrl: "/media/guanyu-6.png"
   },
   {
     title: "2025年深圳分公司",
-    imageUrl: "/media/service-brand-bg.jpg"
+    imageUrl: "/media/guanyu-7.png"
   }
 ];
 
@@ -684,10 +687,7 @@ function qualificationMarkup() {
             <p>上海航运交易所正式会员可提供更顺畅的服务，覆盖知识产权商品等特殊货物的无船承运服务。</p>
           </div>
           <div class="certificate-collage" aria-label="资质证书展示">
-            <span class="certificate-paper certificate-paper-a">NVOCC</span>
-            <span class="certificate-paper certificate-paper-b">CATA</span>
-            <span class="certificate-paper certificate-paper-c">IATA</span>
-            <span class="certificate-paper certificate-paper-d">ISO</span>
+            <img src="/media/guanyu-10.png" alt="">
           </div>
         </div>
       </div>
@@ -918,7 +918,7 @@ function aboutPage(siteAssets) {
         <div class="container">
           <h1 class="about-section-title">新悦简介</h1>
           <div class="about-intro-grid">
-            <img src="/media/service-booking.jpg" alt="新悦航运海运服务">
+            <img src="/media/guanyu-2.png" alt="新悦航运海运服务">
             <div class="about-intro-copy">
               <p>上海新悦航运有限公司是一家获中国交通运输部正式认可，具备无船承运人（NVOCC）资质的货运代理公司，同时也是上海航运交易所的正式会员。此外，公司还获得中国航空运输协会（CATA）认可，成为中国民用航空国际运输业务的指定代理。</p>
               <p>公司在中国国内港口以及全球各主要港口间构建了紧密的网络，为客户提供优质、高效且安全的物流服务。</p>
@@ -939,7 +939,7 @@ function aboutPage(siteAssets) {
         <div class="container">
           <h2 class="about-section-title">海运方面的实力</h2>
           <div class="strength-row">
-            <img src="/media/service-customs.jpg" alt="海运代理服务">
+            <img src="/media/guanyu-8.png" alt="海运代理服务">
             <div>
               <p>我司除了提供整箱和拼箱的海运进出口货物的国际运输代理业务的一条龙服务以外，还可安排上门提货和将货物按时送达客户所指定地点等服务。</p>
               <p>我司拥有日本、美洲、欧洲、澳洲等多条优势航线，并与多家船公司保持良好的合作关系。</p>
@@ -955,7 +955,7 @@ function aboutPage(siteAssets) {
             <div>
               <p>公司与多家航空公司签订长期协议，在舱位和运费上拥有优势，早上9点前交货可安排当天班机，解决客户的紧急需求。</p>
             </div>
-            <img src="/media/service-brand-bg.jpg" alt="空运服务">
+            <img src="/media/guanyu-9.png" alt="空运服务">
           </div>
         </div>
       </section>
