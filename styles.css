@@ -2060,7 +2060,7 @@ img {
   gap: 34px;
 }
 
-.related-performance-china {
+.related-performance-visual {
   grid-template-columns: minmax(0, 520px);
   align-items: start;
   gap: 24px;

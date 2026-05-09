@@ -761,7 +761,7 @@ function relatedCompanyMarkup() {
       id: "performance",
       label: "货物处理量的业绩表现",
       content: `
-        <div class="related-performance related-performance-china">
+        <div class="related-performance related-performance-visual">
           <div class="related-text-panel">
             <h3>货物处理量的业绩表现</h3>
             ${performance.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
@@ -774,18 +774,12 @@ function relatedCompanyMarkup() {
       id: "japan",
       label: "日本侧业绩",
       content: `
-        <div class="related-performance">
+        <div class="related-performance related-performance-visual">
           <div class="related-text-panel">
             <h3>日本侧业绩</h3>
             ${japan.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}
           </div>
-          <div class="japan-route-map" aria-label="日本港口覆盖示意图">
-            <span>北海道</span>
-            <span>东京</span>
-            <span>名古屋</span>
-            <span>大阪</span>
-            <span>福冈</span>
-          </div>
+          <img class="related-performance-image" src="/media/ribenyeji.png" alt="日本港口覆盖示意图">
         </div>
       `
     }
