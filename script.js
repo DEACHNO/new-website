@@ -49,7 +49,7 @@ const serviceItems = {
 const noticesApiUrl = "/api/notices";
 const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
-const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260509-shouye-media2";
+const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260510-customs-media";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
@@ -143,22 +143,22 @@ const defaultSiteAssets = {
       {
         title: "专业成就可能",
         subtitle: "精准安排每一段航程，连接你的全球交付计划。",
-        backgroundImageUrl: "/media/shouye-1.png"
+        backgroundImageUrl: "/media/shouye-1-hd.png"
       },
       {
         title: "专业成就可能",
         subtitle: "海运、空运与仓配协同，提升每一次履约效率。",
-        backgroundImageUrl: "/media/shouye-2.png"
+        backgroundImageUrl: "/media/shouye-2-hd.png"
       },
       {
         title: "专业成就可能",
         subtitle: "合规清关与现场查验支持，让货物流转更顺畅。",
-        backgroundImageUrl: "/media/shouye-3.png"
+        backgroundImageUrl: "/media/shouye-3-hd.png"
       },
       {
         title: "专业成就可能",
         subtitle: "稳定仓储与配送执行，保障重要货物按期送达。",
-        backgroundImageUrl: "/media/shouye-4.png"
+        backgroundImageUrl: "/media/shouye-4-hd.png"
       }
     ]
   },
@@ -331,8 +331,9 @@ function homePage(items, siteAssets) {
                 <div
                   class="hero-slide ${index === 0 ? "is-active" : ""}"
                   data-hero-slide="${index}"
-                  style="background-image: linear-gradient(90deg, rgba(14, 26, 38, 0.58), rgba(14, 26, 38, 0.14) 40%, rgba(255, 255, 255, 0) 75%), url('${escapeHtml(slide.backgroundImageUrl)}');"
-                ></div>
+                >
+                  <img class="hero-slide-image" src="${escapeHtml(slide.backgroundImageUrl)}" alt="">
+                </div>
               `
             )
             .join("")}
@@ -344,6 +345,8 @@ function homePage(items, siteAssets) {
             <p id="hero-subtitle">${escapeHtml(firstSlide.subtitle || "")}</p>
           </div>
         </div>
+        <button class="hero-nav hero-nav-prev" type="button" data-hero-nav="prev" aria-label="上一张轮播图"></button>
+        <button class="hero-nav hero-nav-next" type="button" data-hero-nav="next" aria-label="下一张轮播图"></button>
         <div class="hero-indicators" role="tablist" aria-label="首页轮播图">
           ${heroSlides
             .map(
@@ -352,6 +355,7 @@ function homePage(items, siteAssets) {
                   class="hero-indicator ${index === 0 ? "is-active" : ""}"
                   type="button"
                   data-hero-indicator="${index}"
+                  aria-selected="${index === 0 ? "true" : "false"}"
                   aria-label="切换到第 ${index + 1} 张轮播图"
                 ></button>
               `
@@ -1261,11 +1265,15 @@ function serviceDetailPage(type = "1") {
     "1": {
       title: "订舱服务详情",
       sectionTitle: "关于订舱",
-      heroImageUrl: "/media/service-customs.jpg",
-      primaryImageUrl: "/media/service-booking.jpg",
-      secondaryImageUrl: "/media/service-customs.jpg",
+      heroImageUrl: "/media/dingcang-1-hd.png",
+      heroFullBanner: true,
+      heroAspectRatio: "1925 / 817",
+      primaryImageUrl: "/media/dingcang-2.jpeg",
+      secondaryImageUrl: "/media/dingcang-3.jpeg",
       primaryAlt: "航空货物订舱服务",
       secondaryAlt: "国际海运订舱服务",
+      primaryClass: "service-detail-fit",
+      secondaryClass: "service-detail-fit",
       intro: [
         "本公司专为有整箱（FCL）及拼箱（LCL）等货物国际运输需求的客户，以最优方式妥善安排船运或航空舱位，确保货物在指定日期前送达目的地。",
         "公司的专业团队成员，皆秉持着诚挚热忱的服务理念，深度融入客户视角，耐心倾听您的每一项需求与期望，凭借深厚的物流知识与行业经验，为客户量身定制最佳运输方案。在费用方面，我们坚守透明公正的原则，提供快速、精准的报价服务，报价清晰透明，绝无任何隐藏的额外费用，致力于为客户打造安心、省心的运输体验。"
@@ -1279,13 +1287,15 @@ function serviceDetailPage(type = "1") {
     "2": {
       title: "清关·查验详情",
       sectionTitle: "清关·查验",
-      heroImageUrl: "/media/service-customs.jpg",
-      primaryImageUrl: "/media/service-brand-bg.jpg",
-      secondaryImageUrl: "/media/service-booking.jpg",
+      heroImageUrl: "/media/qingguan-1-hd.png",
+      heroFullBanner: true,
+      heroAspectRatio: "1983 / 793",
+      primaryImageUrl: "/media/qingguan-2.jpeg",
+      secondaryImageUrl: "/media/qingguan-3.jpeg",
       primaryAlt: "现场查验与物流协调",
       secondaryAlt: "通关业务现场协作",
-      primaryClass: "service-detail-focus-brand-top",
-      secondaryClass: "service-detail-focus-bottom",
+      primaryClass: "service-detail-fit",
+      secondaryClass: "service-detail-fit",
       intro: [
         "为助力客户顺畅开展进出口贸易，我们提供申报所需文件制作、关税缴纳、审查、海关查验见证等代理服务。"
       ],
@@ -1316,12 +1326,17 @@ function serviceDetailPage(type = "1") {
   const primaryClass = detail.primaryClass || "service-detail-focus-bottom";
   const secondaryClass = detail.secondaryClass || "service-detail-focus-top";
   const heroPosition = detail.heroPosition || "center top";
+  const heroClass = detail.heroFullBanner ? " service-detail-hero-full-banner" : "";
+  const heroStyle = detail.heroFullBanner
+    ? `--service-detail-hero-ratio: ${escapeHtml(detail.heroAspectRatio || "1925 / 817")}; background-image: url('${escapeHtml(detail.heroImageUrl)}');`
+    : `background-position: ${escapeHtml(heroPosition)}; background-image: linear-gradient(90deg, rgba(10, 18, 30, 0.3), rgba(10, 18, 30, 0.04)), url('${escapeHtml(detail.heroImageUrl)}');`;
+  const heroTitleClass = detail.heroFullBanner ? ` class="sr-only"` : "";
 
   return `
     <div class="page-shell service-detail-page">
-      <section class="service-detail-hero" style="background-position: ${escapeHtml(heroPosition)}; background-image: linear-gradient(90deg, rgba(10, 18, 30, 0.3), rgba(10, 18, 30, 0.04)), url('${escapeHtml(detail.heroImageUrl)}');">
+      <section class="service-detail-hero${heroClass}" style="${heroStyle}">
         <div class="container service-detail-hero-inner">
-          <h1>${escapeHtml(detail.title)}</h1>
+          <h1${heroTitleClass}>${escapeHtml(detail.title)}</h1>
         </div>
       </section>
 
@@ -1377,34 +1392,34 @@ function serviceCenterPage(siteAssets) {
       label: "ブッキング",
       heading: "国际货物的订舱服务",
       description: serviceItems.booking.text,
-      imageUrl: "/media/service-customs.jpg",
+      imageUrl: "/media/yewuzhongxin-2.jpeg",
       imageAlt: "国际货物订舱服务",
-      imageClass: "service-center-focus-top"
+      imageClass: ""
     },
     {
       key: "customs",
       label: "通関・検査",
       heading: "进出口的通关业务",
       description: serviceItems.customs.text,
-      imageUrl: "/media/service-booking.jpg",
+      imageUrl: "/media/yewuzhongxin-3.jpeg",
       imageAlt: "进出口通关业务",
-      imageClass: "service-center-focus-bottom"
+      imageClass: ""
     },
     {
       key: "warehouse",
       label: "仓储配送服务",
       heading: "配送服务",
       description: serviceItems.warehouse.text,
-      imageUrl: "/media/service-warehouse.jpg",
+      imageUrl: "/media/yewuzhongxin-4.jpeg",
       imageAlt: "仓储配送服务",
-      imageClass: "service-center-focus-bottom-left"
+      imageClass: ""
     }
   ];
-  const heroImageUrl = siteAssets?.homeHero?.slides?.[0]?.backgroundImageUrl || "/media/home-hero.jpg";
+  const heroImageUrl = "/media/yewuzhongxin-1-hd.png";
 
   return `
     <div class="page-shell service-center-page">
-      <section class="service-center-hero" style="background-image: linear-gradient(90deg, rgba(11, 17, 25, 0.16), rgba(11, 17, 25, 0.08)), url('${escapeHtml(heroImageUrl)}');">
+      <section class="service-center-hero" style="background-image: url('${escapeHtml(heroImageUrl)}');">
         <div class="container service-center-hero-inner">
           <h1>全力打造理想物流方案的货运先锋</h1>
         </div>
@@ -1518,10 +1533,35 @@ function initHeroCarousel(siteAssets) {
   stopHeroCarousel();
 
   const slides = getHomeHeroSlides(siteAssets);
+  const heroElement = document.querySelector(".hero-media");
   const slideElements = Array.from(document.querySelectorAll("[data-hero-slide]"));
+  const imageElements = Array.from(document.querySelectorAll(".hero-slide-image"));
   const indicatorElements = Array.from(document.querySelectorAll("[data-hero-indicator]"));
+  const navElements = Array.from(document.querySelectorAll("[data-hero-nav]"));
   const titleElement = document.querySelector("#hero-title");
   const subtitleElement = document.querySelector("#hero-subtitle");
+
+  const updateHeroAspectRatio = (nextIndex) => {
+    const image = imageElements[nextIndex];
+
+    if (!heroElement || !image) {
+      return;
+    }
+
+    const applyRatio = () => {
+      if (image.naturalWidth && image.naturalHeight) {
+        heroElement.style.setProperty("--hero-aspect-ratio", `${image.naturalWidth} / ${image.naturalHeight}`);
+      }
+    };
+
+    if (image.complete) {
+      applyRatio();
+    } else {
+      image.addEventListener("load", applyRatio, { once: true });
+    }
+  };
+
+  updateHeroAspectRatio(0);
 
   if (slides.length <= 1 || !slideElements.length || !indicatorElements.length || !titleElement || !subtitleElement) {
     return;
@@ -1531,6 +1571,7 @@ function initHeroCarousel(siteAssets) {
 
   const applySlide = (nextIndex) => {
     activeIndex = nextIndex;
+    updateHeroAspectRatio(nextIndex);
 
     slideElements.forEach((element, index) => {
       element.classList.toggle("is-active", index === nextIndex);
@@ -1538,22 +1579,40 @@ function initHeroCarousel(siteAssets) {
 
     indicatorElements.forEach((element, index) => {
       element.classList.toggle("is-active", index === nextIndex);
+      element.setAttribute("aria-selected", index === nextIndex ? "true" : "false");
     });
 
     titleElement.textContent = slides[nextIndex].title || "专业成就可能";
     subtitleElement.textContent = slides[nextIndex].subtitle || "";
   };
 
+  const startTimer = () => {
+    stopHeroCarousel();
+    heroCarouselTimer = window.setInterval(() => {
+      const nextIndex = (activeIndex + 1) % slides.length;
+      applySlide(nextIndex);
+    }, 4000);
+  };
+
+  const applyManualSlide = (nextIndex) => {
+    applySlide((nextIndex + slides.length) % slides.length);
+    startTimer();
+  };
+
   indicatorElements.forEach((element, index) => {
     element.addEventListener("click", () => {
-      applySlide(index);
+      applyManualSlide(index);
     });
   });
 
-  heroCarouselTimer = window.setInterval(() => {
-    const nextIndex = (activeIndex + 1) % slides.length;
-    applySlide(nextIndex);
-  }, 4000);
+  navElements.forEach((element) => {
+    element.addEventListener("click", () => {
+      const direction = element.dataset.heroNav === "prev" ? -1 : 1;
+      applyManualSlide(activeIndex + direction);
+    });
+  });
+
+  startTimer();
 }
 
 function bindServiceTabs(siteAssets) {

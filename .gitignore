@@ -1,5 +1,6 @@
 .tmp-profile/
 .verify-profile-*/
+.codex-ssh/
 
 # OS / editor
 .DS_Store
