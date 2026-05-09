@@ -32,6 +32,9 @@
     "subtitle": "我们将提供最新资讯和船期表等相关通知",
     "backgroundImageUrl": "/media/news-hero.jpg"
   },
+  "aboutHero": {
+    "backgroundImageUrl": "/media/guanyu-1.png?v=hd-20260510"
+  },
   "services": {
     "booking": {
       "imageUrl": "/media/shouye-5.png",

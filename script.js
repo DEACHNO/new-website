@@ -49,7 +49,7 @@ const serviceItems = {
 const noticesApiUrl = "/api/notices";
 const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
-const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260510-customs-media";
+const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260510-about-hd";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
@@ -902,7 +902,7 @@ function officeMapMarkup() {
 }
 
 function aboutPage(siteAssets) {
-  const heroImageUrl = siteAssets?.aboutHero?.backgroundImageUrl || "/media/service-brand-bg.jpg";
+  const heroImageUrl = siteAssets?.aboutHero?.backgroundImageUrl || defaultSiteAssets.aboutHero.backgroundImageUrl;
 
   return `
     <div class="about-page" id="about-top">
