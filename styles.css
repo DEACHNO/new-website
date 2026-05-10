@@ -1178,9 +1178,9 @@ img {
 
 .split-grid {
   display: grid;
-  grid-template-columns: 1.28fr 1fr;
+  grid-template-columns: minmax(0, 1.16fr) minmax(360px, 0.84fr);
   min-height: 506px;
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
 }
 
@@ -1188,7 +1188,7 @@ img {
   position: relative;
   min-height: 506px;
   color: #fff;
-  overflow: hidden;
+  overflow: visible;
   background: transparent;
 }
 
@@ -1203,16 +1203,17 @@ img {
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
     linear-gradient(rgba(236, 29, 25, 0.92), rgba(236, 29, 25, 0.92)),
     url("./media/service-brand-bg.jpg") center/cover no-repeat;
-  clip-path: polygon(0 0, 100% 0, 72% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%);
 }
 
 .about-card-inner {
   position: relative;
   z-index: 1;
-  max-width: 480px;
-  margin-left: clamp(280px, 23vw, 470px);
+  width: min(430px, calc(100% - clamp(88px, 16vw, 260px)));
+  max-width: 100%;
+  margin-left: clamp(52px, 15vw, 260px);
   margin-right: auto;
-  padding: 78px 0 64px;
+  padding: clamp(48px, 6vw, 78px) 0 clamp(46px, 5vw, 64px);
 }
 
 .about-card h2,
@@ -1224,8 +1225,9 @@ img {
 
 .about-card p,
 .contact-card p {
-  line-height: 1.72;
-  font-size: 16px;
+  line-height: 1.78;
+  font-size: clamp(15px, 1.2vw, 16px);
+  overflow-wrap: anywhere;
 }
 
 .about-card .btn {
