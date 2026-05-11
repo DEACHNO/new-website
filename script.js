@@ -49,7 +49,7 @@ const serviceItems = {
 const noticesApiUrl = "/api/notices";
 const noticesFallbackUrl = "/data/notices.json";
 const siteAssetsApiUrl = "/api/site-assets";
-const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260510-about-hd";
+const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260511-remove-shouye4";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
@@ -246,7 +246,7 @@ function getHomeHeroSlides(siteAssets) {
   const slides = siteAssets?.homeHero?.slides;
 
   if (Array.isArray(slides) && slides.length) {
-    return slides;
+    return slides.filter((slide) => !/\/media\/shouye-4(?:-hd)?\.png(?:\?|$)/.test(slide.backgroundImageUrl || ""));
   }
 
   if (siteAssets?.homeHero?.backgroundImageUrl) {
@@ -259,7 +259,7 @@ function getHomeHeroSlides(siteAssets) {
     ];
   }
 
-  return defaultSiteAssets.homeHero.slides;
+  return defaultSiteAssets.homeHero.slides.filter((slide) => !/\/media\/shouye-4(?:-hd)?\.png(?:\?|$)/.test(slide.backgroundImageUrl || ""));
 }
 
 function serviceMediaMarkup(service, serviceAsset) {
