@@ -154,11 +154,6 @@ const defaultSiteAssets = {
         title: "专业成就可能",
         subtitle: "合规清关与现场查验支持，让货物流转更顺畅。",
         backgroundImageUrl: "/media/shouye-3-hd.png"
-      },
-      {
-        title: "专业成就可能",
-        subtitle: "稳定仓储与配送执行，保障重要货物按期送达。",
-        backgroundImageUrl: "/media/shouye-4-hd.png"
       }
     ]
   },
