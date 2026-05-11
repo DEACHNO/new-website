@@ -135,8 +135,8 @@ const defaultNotices = [
 
 const defaultSiteAssets = {
   brand: {
-    headerLogoImageUrl: "/media/logo-black.png?v=20260506-split-logo2",
-    footerLogoImageUrl: "/media/logo-white.png?v=20260506-split-logo2"
+    headerLogoImageUrl: "/media/logo-black.png?v=20260511-company-name",
+    footerLogoImageUrl: "/media/logo-white.png?v=20260511-company-name"
   },
   homeHero: {
     slides: [
