@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: new-website
-    ports:
-      - "80:80"
+    network_mode: host
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot
     restart: unless-stopped

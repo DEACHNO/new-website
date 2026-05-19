@@ -52,9 +52,6 @@ const siteAssetsApiUrl = "/api/site-assets";
 const siteAssetsFallbackUrl = "/data/site-assets.json?v=20260511-remove-shouye4";
 const app = document.querySelector("#app");
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
-const loginRequiredLinks = Array.from(document.querySelectorAll("[data-login-required]"));
-const loginRequiredModal = document.querySelector("#login-required-modal");
-const loginModalCloseButtons = Array.from(document.querySelectorAll("[data-login-modal-close]"));
 
 let noticesCache = null;
 let siteAssetsCache = null;
@@ -143,17 +140,17 @@ const defaultSiteAssets = {
       {
         title: "专业成就可能",
         subtitle: "精准安排每一段航程，连接你的全球交付计划。",
-        backgroundImageUrl: "/media/shouye-1-hd.png"
+        backgroundImageUrl: "/media/shouye-1-hd.png?v=20260512-textless"
       },
       {
         title: "专业成就可能",
         subtitle: "海运、空运与仓配协同，提升每一次履约效率。",
-        backgroundImageUrl: "/media/shouye-2-hd.png"
+        backgroundImageUrl: "/media/shouye-2-hd.png?v=20260512-textless"
       },
       {
         title: "专业成就可能",
         subtitle: "合规清关与现场查验支持，让货物流转更顺畅。",
-        backgroundImageUrl: "/media/shouye-3-hd.png"
+        backgroundImageUrl: "/media/shouye-3-hd.png?v=20260512-textless"
       }
     ]
   },
@@ -501,10 +498,6 @@ const aboutTimelineItems = [
     value: ["1120万元（约2亿2000万日元）"]
   },
   {
-    label: "公司代表",
-    value: ["代表董事兼总经理", "盛晓东"]
-  },
-  {
     label: "主要经营内容",
     value: ["货物运输代理业务", "进出口通关代理业务", "进出口代理业务"]
   },
@@ -725,8 +718,6 @@ function relatedCompanyMarkup() {
             <dd>2010年1月15日</dd>
             <dt>资本金</dt>
             <dd>1000万日元</dd>
-            <dt>公司法人</dt>
-            <dd>代表董事兼总经理 盛晓亮</dd>
             <dt>主要经营内容</dt>
             <dd>货物运输 / 进出口通关代理业务 / 进出口代理业务</dd>
           </dl>
@@ -1605,43 +1596,6 @@ function bindServiceTabs(siteAssets) {
   });
 }
 
-function openLoginRequiredModal() {
-  if (!loginRequiredModal) {
-    return;
-  }
-
-  loginRequiredModal.classList.add("is-open");
-  loginRequiredModal.setAttribute("aria-hidden", "false");
-}
-
-function closeLoginRequiredModal() {
-  if (!loginRequiredModal) {
-    return;
-  }
-
-  loginRequiredModal.classList.remove("is-open");
-  loginRequiredModal.setAttribute("aria-hidden", "true");
-}
-
-function bindLoginRequiredModal() {
-  loginRequiredLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      openLoginRequiredModal();
-    });
-  });
-
-  loginModalCloseButtons.forEach((button) => {
-    button.addEventListener("click", closeLoginRequiredModal);
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeLoginRequiredModal();
-    }
-  });
-}
-
 async function render() {
   const route = normalizeRoute(location.hash);
   const path = routePath(route);
@@ -1768,5 +1722,4 @@ if (!location.hash) {
   render();
 }
 
-bindLoginRequiredModal();
 window.addEventListener("hashchange", render);

@@ -422,17 +422,39 @@ img {
 }
 
 .hero-media::before,
-.hero-media::after,
-.hero-media .hero-overlay {
+.hero-media::after {
   display: none;
 }
 
+.hero-media .hero-overlay {
+  display: block;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.46) 0%, rgba(0, 0, 0, 0.28) 34%, rgba(0, 0, 0, 0.04) 64%, transparent 100%);
+}
+
 .hero-media .hero-inner {
+  z-index: 2;
   min-height: 100%;
 }
 
 .hero-media .hero-copy {
-  display: none;
+  display: block;
+  max-width: 620px;
+  padding-top: 0;
+  margin-left: clamp(52px, 7vw, 142px);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.38);
+}
+
+.hero-media .hero-copy h1 {
+  margin-bottom: clamp(16px, 1.15vw, 24px);
+  font-size: clamp(36px, 4.15vw, 64px);
+}
+
+.hero-media .hero-copy p {
+  max-width: 720px;
+  font-size: clamp(16px, 1.35vw, 24px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-media .hero-indicators {
@@ -2444,66 +2466,6 @@ img {
   margin: 0;
   color: var(--muted);
   line-height: 1.9;
-}
-
-.login-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.login-modal.is-open {
-  display: flex;
-}
-
-.login-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(12, 12, 24, 0.52);
-  backdrop-filter: blur(4px);
-}
-
-.login-modal-panel {
-  position: relative;
-  width: min(420px, 100%);
-  background: #fff;
-  padding: 34px 34px 30px;
-  box-shadow: 0 24px 70px rgba(12, 12, 24, 0.22);
-}
-
-.login-modal-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  background: transparent;
-  color: #7b808c;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.login-modal-panel h2 {
-  margin: 0 0 12px;
-  font-size: 26px;
-}
-
-.login-modal-panel p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.8;
-}
-
-.login-modal-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 28px;
 }
 
 .footer {
